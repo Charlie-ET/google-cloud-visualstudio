@@ -151,6 +151,9 @@
     <Compile Include="Controls\ProgressIndicator.xaml.cs">
       <DependentUpon>ProgressIndicator.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TitleBar.xaml.cs">
+      <DependentUpon>TitleBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FirewallManagement\PortInfo.cs" />
     <Compile Include="FirewallManagement\PortManagerViewModel.cs" />
     <Compile Include="FirewallManagement\PortManagerWindow.cs" />
@@ -231,6 +234,8 @@
     <Compile Include="StackdriverErrorReporting\ErrorReportingToolWindowControl.xaml.cs">
       <DependentUpon>ErrorReportingToolWindowControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="StackdriverErrorReporting\ErrorReportingOverViewViewModel.cs" />
+    <Compile Include="StackdriverErrorReporting\ErrorGroupItem.cs" />
     <Compile Include="TerminalServer\TerminalServerManager.cs" />
     <Compile Include="SolutionUtils\ISolutionProject.cs" />
     <Compile Include="SolutionUtils\SolutionHelper.cs" />
@@ -292,6 +297,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="StackdriverErrorReporting\Resources\ErrorReportingToolWindowCommand.png" />
+    <Resource Include="Theming\Resources\logo_cloud.png" />
     <Resource Include="Theming\Resources\ic_help_black_14px.png" />
     <Resource Include="PublishDialogSteps\ChoiceStep\Resources\AppEngine_128px_Retina.png" />
     <Resource Include="PublishDialogSteps\ChoiceStep\Resources\ComputeEngine_128px_Retina.png" />
@@ -411,6 +417,10 @@
     </Reference>
     <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.19.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.Auth.1.19.0\lib\net45\Google.Apis.Auth.PlatformServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Google.Apis.Clouderrorreporting.v1beta1, Version=1.19.0.650, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Clouderrorreporting.v1beta1.1.19.0.650\lib\net45\Google.Apis.Clouderrorreporting.v1beta1.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Google.Apis.CloudResourceManager.v1, Version=1.19.0.635, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
@@ -584,6 +594,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ProgressIndicator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TitleBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

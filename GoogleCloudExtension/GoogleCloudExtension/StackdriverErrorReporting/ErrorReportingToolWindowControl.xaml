@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.14.0"                         
+             xmlns:control="clr-namespace:GoogleCloudExtension.Controls"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
@@ -21,13 +22,84 @@
                 <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.PanelTitleBarKey}}" />
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
             </Style>
+
+
+
         </ResourceDictionary>
     </UserControl.Resources>
+    
     <Grid Margin="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        
+        <control:TitleBar Grid.Row="0"/>
+        
+        <Grid Grid.Row="1"
+              Margin="0, 12, 0, 12" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock 
+                Grid.Column="0"
+                Text="Errors in the last 6 hours" 
+                Style="{StaticResource CommonTextStyle}"/>
+            <Border Grid.Column="1" HorizontalAlignment="Stretch"/>
+            <StackPanel Grid.Column="2"
+                        Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource CommonButtonStandardStyle}">
+                        <Setter Property="Margin" Value="0, 0, 6, 0" />
+                    </Style>
+                </StackPanel.Resources>
+                <Button>1 hour</Button>
+                <Button>6 hours</Button>
+                <Button>1 day</Button>
+            </StackPanel>
+        </Grid>
+
+        <DataGrid Grid.Row="2"
+                  x:Name="dataGridEventGroup"
+                  IsReadOnly="True" 
+                  HeadersVisibility="Column"
+                  AutoGenerateColumns="False" 
+                  ItemsSource="{Binding GroupStatsView}"   
+                  >
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Count}"
+                                    />
+                
+                <DataGridTextColumn Binding="{Binding Error}"
+                                    Header="Error"
+                                    />
+
+                <DataGridTextColumn Binding="{Binding SeenIn}" 
+                                    Header="Seen in"
+                                    />
+
+                <DataGridTextColumn Binding="{Binding FirstSeen, StringFormat=d}" 
+                                    Header="First seen"
+                                    />
+
+                <DataGridTextColumn Binding="{Binding LastSeen, StringFormat=d}" 
+                                    Header="Last seen"
+                                    />
+
+                <DataGridTextColumn Binding="{Binding Status}" 
+                                    Header="Status"
+                                    />
+
+                <DataGridTextColumn Binding="{Binding Mute}" 
+                                    Header=""
+                                    />
+
+            </DataGrid.Columns>
+
+        </DataGrid>
     </Grid>
 </UserControl>
