@@ -30,14 +30,26 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
     {
         private ErrorGroupStats _errorGroup;
 
+        public ProtectedCommand NavigateDetailCommand { get; }
         public string Error => _errorGroup.Representative.Message;
         public long? Count => _errorGroup.Count;
         public object FirstSeen => _errorGroup.FirstSeenTime;
         public object LastSeen => _errorGroup.LastSeenTime;
+        public string Message { get; }
+        public string Stack { get; }
 
         public ErrorGroupItem(ErrorGroupStats errorGroup)
         {
             _errorGroup = errorGroup;
+            string[] lines = _errorGroup.Representative.Message.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            Message = lines?[0];
+            Stack = lines?[1];
+            NavigateDetailCommand = new ProtectedCommand(NavigateDetail);
+        }
+
+        private void NavigateDetail()
+        {
+            Debug.WriteLine($"{Message} is clicked");
         }
     }
 }

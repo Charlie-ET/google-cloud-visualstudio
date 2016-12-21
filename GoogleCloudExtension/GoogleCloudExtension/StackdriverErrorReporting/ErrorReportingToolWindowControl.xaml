@@ -23,8 +23,38 @@
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
             </Style>
 
+            <Style x:Key="LinkButton" TargetType="Button">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <TextBlock TextDecorations="Underline">
+                                <ContentPresenter />
+                            </TextBlock>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Foreground" Value="Blue" />
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="true">
+                        <Setter Property="Foreground" Value="Red" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
 
-
+            <Style x:Key="cellStyle" TargetType="DataGridCell">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="DataGridCell">
+                            <Border  BorderThickness="0">
+                                <Border x:Name="border" Padding="0, 4, 0, 4" >
+                                    <ContentPresenter />
+                                </Border>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
         </ResourceDictionary>
     </UserControl.Resources>
     
@@ -68,19 +98,35 @@
                   HeadersVisibility="Column"
                   AutoGenerateColumns="False" 
                   ItemsSource="{Binding GroupStatsView}"   
+                  CellStyle="{StaticResource cellStyle}"
                   >
-
+            <DataGrid.Resources>
+                <!--DataTemplate for Published Date column defined in Grid.Resources.  PublishDate is a property on the ItemsSource of type DateTime -->
+                <DataTemplate x:Key="MessageStackTemplate" >
+                    <StackPanel>
+                        <Button Style="{StaticResource LinkButton}" 
+                                Content="{Binding Message}"
+                                Command="{Binding NavigateDetailCommand}"
+                                />
+                        <TextBlock Text="{Binding Stack}" Style="{StaticResource CommonTextStyle}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </DataGrid.Resources>
+    
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Count}"
                                     />
                 
-                <DataGridTextColumn Binding="{Binding Error}"
+                <!--<DataGridTextColumn Binding="{Binding Error}"
                                     Header="Error"
-                                    />
+                                    />-->
+
+                <DataGridTemplateColumn Header="Error" 
+                                        CellTemplate="{StaticResource MessageStackTemplate}" />
 
                 <DataGridTextColumn Binding="{Binding SeenIn}" 
-                                    Header="Seen in"
-                                    />
+                            Header="Seen in"
+                            />
 
                 <DataGridTextColumn Binding="{Binding FirstSeen, StringFormat=d}" 
                                     Header="First seen"
