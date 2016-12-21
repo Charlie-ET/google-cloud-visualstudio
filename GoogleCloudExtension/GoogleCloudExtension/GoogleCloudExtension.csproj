@@ -226,6 +226,11 @@
     <Compile Include="SplitTrafficManagement\SplitTrafficWindowContent.xaml.cs">
       <DependentUpon>SplitTrafficWindowContent.xaml</DependentUpon>
     </Compile>
+    <Compile Include="StackdriverErrorReporting\ErrorReportingToolWindow.cs" />
+    <Compile Include="StackdriverErrorReporting\ErrorReportingToolWindowCommand.cs" />
+    <Compile Include="StackdriverErrorReporting\ErrorReportingToolWindowControl.xaml.cs">
+      <DependentUpon>ErrorReportingToolWindowControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TerminalServer\TerminalServerManager.cs" />
     <Compile Include="SolutionUtils\ISolutionProject.cs" />
     <Compile Include="SolutionUtils\SolutionHelper.cs" />
@@ -286,6 +291,7 @@
     <Compile Include="Utils\ViewModelBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="StackdriverErrorReporting\Resources\ErrorReportingToolWindowCommand.png" />
     <Resource Include="Theming\Resources\ic_help_black_14px.png" />
     <Resource Include="PublishDialogSteps\ChoiceStep\Resources\AppEngine_128px_Retina.png" />
     <Resource Include="PublishDialogSteps\ChoiceStep\Resources\ComputeEngine_128px_Retina.png" />
@@ -622,6 +628,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SplitTrafficManagement\SplitTrafficWindowContent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StackdriverErrorReporting\ErrorReportingToolWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

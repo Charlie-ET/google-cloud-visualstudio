@@ -58,6 +58,7 @@ namespace GoogleCloudExtension
     [ProvideToolWindow(typeof(CloudExplorerToolWindow))]
     [ProvideAutoLoad(UIContextGuids80.NoSolution)]
     [ProvideOptionPage(typeof(AnalyticsOptionsPage), "Google Cloud Tools", "Usage Report", 0, 0, false)]
+    [ProvideToolWindow(typeof(GoogleCloudExtension.StackdriverErrorReporting.ErrorReportingToolWindow))]
     public sealed class GoogleCloudExtensionPackage : Package
     {
         private static readonly Lazy<string> s_appVersion = new Lazy<string>(() => Assembly.GetExecutingAssembly().GetName().Version.ToString());
@@ -216,6 +217,7 @@ namespace GoogleCloudExtension
             // Ensure the commands UI state is updated when the GCP project changes.
             CredentialsStore.Default.Reset += (o, e) => ShellUtils.InvalidateCommandsState();
             CredentialsStore.Default.CurrentProjectIdChanged += (o, e) => ShellUtils.InvalidateCommandsState();
+            GoogleCloudExtension.StackdriverErrorReporting.ErrorReportingToolWindowCommand.Initialize(this);
         }
 
         public static GoogleCloudExtensionPackage Instance { get; private set; }
