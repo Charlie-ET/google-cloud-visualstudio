@@ -48,7 +48,7 @@ namespace GoogleCloudExtension.Utils
                 UserPromptUtils.ExceptionPrompt(ex);
             }
             catch (Exception ex)
-            {
+            {   
                 Debug.WriteLine($"Uncaught exception: {ex.Message}");
                 if (ErrorHandler.IsCriticalException(ex))
                 {

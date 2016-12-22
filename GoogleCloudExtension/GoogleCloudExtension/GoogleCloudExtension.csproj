@@ -229,11 +229,16 @@
     <Compile Include="SplitTrafficManagement\SplitTrafficWindowContent.xaml.cs">
       <DependentUpon>SplitTrafficWindowContent.xaml</DependentUpon>
     </Compile>
+    <Compile Include="StackdriverErrorReporting\DetailWindow.xaml.cs">
+      <DependentUpon>DetailWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StackdriverErrorReporting\SerDataSourceInstance.cs" />
     <Compile Include="StackdriverErrorReporting\ErrorReportingDetailToolWindow.cs" />
     <Compile Include="StackdriverErrorReporting\ErrorReportingDetailToolWindowCommand.cs" />
     <Compile Include="StackdriverErrorReporting\ErrorReportingDetailToolWindowControl.xaml.cs">
       <DependentUpon>ErrorReportingDetailToolWindowControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="StackdriverErrorReporting\ErrorReportingDetailViewModel.cs" />
     <Compile Include="StackdriverErrorReporting\ErrorReportingToolWindow.cs" />
     <Compile Include="StackdriverErrorReporting\ErrorReportingToolWindowCommand.cs" />
     <Compile Include="StackdriverErrorReporting\ErrorReportingToolWindowControl.xaml.cs">
@@ -658,6 +663,10 @@
     <Page Include="StackdriverErrorReporting\ErrorReportingToolWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StackdriverErrorReporting\DetailWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="WindowsCredentialsChooser\WindowsCredentialsChooserWindowContent.xaml">
       <SubType>Designer</SubType>

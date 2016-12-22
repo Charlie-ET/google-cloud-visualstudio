@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Google;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Clouderrorreporting.v1beta1;
 using Google.Apis.Clouderrorreporting.v1beta1.Data;
-using Google.Cloud.ErrorReporting.V1Beta1;
-using GoogleCloudExtension.DataSources;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GroupStatsResource = Google.Apis.Clouderrorreporting.v1beta1.ProjectsResource.GroupStatsResource;
 using System.Diagnostics;
@@ -44,10 +44,32 @@ namespace GoogleCloudExtension.DataSources.ErrorReporting
         public async Task<GroupStatsRequestResult> ListGroupStatusAsync()
         {
 
-            var request = Service.Projects.GroupStats.List($"projects/{ProjectId}");
+            var request = Service.Projects.GroupStats.List(ProjectIdQuery);
             request.TimeRangePeriod = GroupStatsResource.ListRequest.TimeRangePeriodEnum.PERIOD30DAYS;
+            var duration = new Google.Protobuf.WellKnownTypes.Duration();
+            duration.Seconds = 24 * 60 * 60;
+            //request.TimedCountDuration = duration;
+            try
+            {
+                var response = await request.ExecuteAsync();
+                return new GroupStatsRequestResult(response.ErrorGroupStats, response.NextPageToken);
+            }
+            catch (GoogleApiException ex)
+            {
+                Debug.WriteLine($"Failed to get log entries: {ex.Message}");
+                throw new DataSourceException(ex.Message, ex);
+            }
+        }
+
+        public async Task<ErrorEventsRequestResult> ListEventsAsync(ErrorGroupStats errorGroup, 
+            ProjectsResource.EventsResource.ListRequest.TimeRangePeriodEnum period 
+            = ProjectsResource.EventsResource.ListRequest.TimeRangePeriodEnum.PERIOD30DAYS)
+        {
+            var request = Service.Projects.Events.List(ProjectIdQuery);
+            request.TimeRangePeriod = period;
+            request.GroupId = errorGroup.Group.GroupId;
             var response = await request.ExecuteAsync();
-            return new GroupStatsRequestResult(response.ErrorGroupStats, response.NextPageToken);
+            return new ErrorEventsRequestResult(response.ErrorEvents, response.NextPageToken);
         }
     }
 }

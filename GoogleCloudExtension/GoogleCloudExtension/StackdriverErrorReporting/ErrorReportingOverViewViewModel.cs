@@ -31,7 +31,6 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
     /// </summary>
     class ErrorReportingOverViewViewModel : ViewModelBase
     {
-        private Lazy<SerDataSource> _dataSource;
         private ObservableCollection<ErrorGroupItem> _groupStatsCollection;
 
         public ListCollectionView GroupStatsView { get; }
@@ -39,15 +38,23 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         public ErrorReportingOverViewViewModel()
         {
             _groupStatsCollection = new ObservableCollection<ErrorGroupItem>();
-            _dataSource = new Lazy<SerDataSource>(CreateDataSource);
             GroupStatsView = new ListCollectionView(_groupStatsCollection);
             GetGroupStats();
         }
 
+
+
         private async Task GetGroupStats()
         {
-            var results = await _dataSource.Value.ListGroupStatusAsync();
-            AddItems(results.GroupStats);
+            try
+            {
+                var results = await SerDataSourceInstance.Instance.Value.ListGroupStatusAsync();
+                AddItems(results.GroupStats);
+            }
+            catch (Exception ex)
+            {
+                
+            }
         }
 
         private void AddItems(IList<ErrorGroupStats> groupStats)
@@ -66,24 +73,6 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
                 }
 
                 _groupStatsCollection.Add(new ErrorGroupItem(item));
-            }
-        }
-
-        /// <summary>
-        /// Create <seealso cref="LoggingDataSource"/> object with current project id.
-        /// </summary>
-        private SerDataSource CreateDataSource()
-        {
-            if (CredentialsStore.Default.CurrentProjectId != null)
-            {
-                return new SerDataSource(
-                    CredentialsStore.Default.CurrentProjectId,
-                    CredentialsStore.Default.CurrentGoogleCredential,
-                    GoogleCloudExtensionPackage.VersionedApplicationName);
-            }
-            else
-            {
-                return null;
             }
         }
     }

@@ -148,6 +148,7 @@
     <Compile Include="DatabaseInstanceExtensions.cs" />
     <Compile Include="DataSourceBase.cs" />
     <Compile Include="DataSourceException.cs" />
+    <Compile Include="ErrorReporting\ErrorEventsRequestResult.cs" />
     <Compile Include="ErrorReporting\GroupStatsRequestResult.cs" />
     <Compile Include="FirewallPort.cs" />
     <Compile Include="GaeDataSource.cs" />

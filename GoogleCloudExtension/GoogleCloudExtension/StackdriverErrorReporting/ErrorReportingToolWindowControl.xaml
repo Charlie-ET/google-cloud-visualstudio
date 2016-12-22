@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.14.0"                         
              xmlns:control="clr-namespace:GoogleCloudExtension.Controls"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
@@ -15,13 +14,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Theming/CommonResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <!-- Page title bar style. -->
-            <Style x:Key="PageTitleBarStyle" TargetType="{x:Type StackPanel}">
-                <Setter Property="Orientation" Value="Horizontal" />
-                <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.PanelTitleBarKey}}" />
-                <Setter Property="HorizontalAlignment" Value="Stretch" />
-            </Style>
 
             <Style x:Key="LinkButton" TargetType="Button">
                 <Setter Property="Template">
@@ -58,7 +50,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     
-    <Grid Margin="12">
+    <Grid Margin="12, 0, 12, 12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>

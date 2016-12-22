@@ -7,9 +7,80 @@
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300"
+             d:DesignHeight="600" d:DesignWidth="800"
              Name="MyToolWindow">
-    <Grid>
-
-    </Grid>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Theming/CommonResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <StackPanel Margin="12, 0, 12, 12">
+        <control:TitleBar/>
+        <Grid Grid.Row="1"
+              Margin="0, 12, 0, 12" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock 
+                Grid.Column="0"
+                Text="Errors in the last 6 hours" 
+                Style="{StaticResource CommonTextStyle}"/>
+            <Border Grid.Column="1" HorizontalAlignment="Stretch"/>
+            <StackPanel Grid.Column="2"
+                        Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource CommonButtonStandardStyle}">
+                        <Setter Property="Margin" Value="0, 0, 6, 0" />
+                    </Style>
+                </StackPanel.Resources>
+                <Button>1 hour</Button>
+                <Button>6 hours</Button>
+                <Button>1 day</Button>
+            </StackPanel>
+        </Grid>
+        <Border BorderThickness="1"
+                DataContext="{Binding GroupItem}">
+        <UniformGrid Rows="1" Columns="4" >
+                <StackPanel>
+                    <TextBlock Text="Occurances" />
+                    <TextBlock Text="{Binding Count}" />
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Seen in" />
+                    <TextBlock Text="{Binding SeenIn}" />
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="First seen" />
+                    <TextBlock Text="{Binding First Seen}" />
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Last seen" />
+                    <TextBlock Text="{Binding LastSeen}" />
+                </StackPanel>
+            </UniformGrid>
+        </Border>    
+        <Canvas Background="Beige" Height="120">
+            <TextBlock Text="{Binding TimeRanges}" />
+        </Canvas>
+        <StackPanel>
+            <TextBlock Text="Stack trace sample" />
+            <TextBlock Text="{Binding Stack}" />
+        </StackPanel>
+        <DataGrid x:Name="DataGridEvents" 
+                  ItemsSource="{Binding EventItemCollection}"
+                  AutoGenerateColumns="False" 
+                  IsReadOnly="True" 
+                  HeadersVisibility="Column"    
+                  ColumnHeaderHeight="10"
+                  >
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding EventTime}" />
+                <DataGridTextColumn Binding="{Binding Message}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </StackPanel>
 </UserControl>

@@ -50,7 +50,7 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             if (commandService != null)
             {
                 var menuCommandID = new CommandID(CommandSet, CommandId);
-                var menuItem = new MenuCommand(this.ShowToolWindow, menuCommandID);
+                var menuItem = new MenuCommand((sender, e) => this.ShowToolWindow(sender, e), menuCommandID);
                 commandService.AddCommand(menuItem);
             }
         }
@@ -75,6 +75,16 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             }
         }
 
+        public static ErrorReportingDetailToolWindow ShowWindow()
+        {
+            if (Instance == null)
+            {
+                Initialize(GoogleCloudExtensionPackage.Instance);
+            }
+
+            return Instance.ShowToolWindow(null, null);
+        }
+
         /// <summary>
         /// Initializes the singleton instance of the command.
         /// </summary>
@@ -89,7 +99,8 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         /// </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event args.</param>
-        private void ShowToolWindow(object sender, EventArgs e)
+        /// <returns>The <seealso cref="ErrorReportingDetailToolWindow"/> object. </returns>
+        private ErrorReportingDetailToolWindow ShowToolWindow(object sender, EventArgs e)
         {
             // Get the instance number 0 of this tool window. This window is single instance so this instance
             // is actually the only one.
@@ -102,6 +113,7 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+            return window as ErrorReportingDetailToolWindow;
         }
     }
 }

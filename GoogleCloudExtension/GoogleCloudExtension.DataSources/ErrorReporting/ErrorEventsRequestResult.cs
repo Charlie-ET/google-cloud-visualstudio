@@ -18,32 +18,32 @@ using System.Collections.Generic;
 namespace GoogleCloudExtension.DataSources.ErrorReporting
 {
     /// <summary>
-    /// The result of Stackdriver error reporting list <seealso cref="ErrorGroupStats"/> request. 
+    /// The result of Stackdriver error reporting list <seealso cref="ErrorEvent"/> request. 
     /// </summary>
-    public class GroupStatsRequestResult
+    public class ErrorEventsRequestResult
     {
         /// <summary>
-        /// Gets a list of <seealso cref="ErrorGroupStats"/> objects. 
+        /// Gets a list of <seealso cref="ErrorEvent"/> objects. 
         /// The value could be null or empty, caller to check.
         /// </summary>
-        public IList<ErrorGroupStats> GroupStats { get; }
+        public IList<ErrorEvent> ErrorEvents { get; }
 
         /// <summary>
-        /// A token is returned if available error group stats count exceeds the page size.
+        /// A token is returned if available logs count exceeds the page size.
         /// </summary>
         public string NextPageToken { get; }
 
         /// <summary>
-        /// Initializes an instance of <seealso cref="GroupStatsRequestResult"/> class.
+        /// Initializes an instance of <seealso cref="ErrorEventsRequestResult"/> class.
         /// </summary>
-        /// <param name="ErrorGroupStats">
-        /// A list of <seealso cref="ErrorGroupStats"/> objects. 
+        /// <param name="errorEvents">
+        /// A list of <seealso cref="ErrorEvent"/> objects. 
         /// Null is valid input.
         /// </param>
         /// <param name="pageToken">Next page token to retrieve more pages.</param>
-        public GroupStatsRequestResult(IList<ErrorGroupStats> groupStats, string nextPageToken)
+        public ErrorEventsRequestResult(IList<ErrorEvent> errorEvents, string nextPageToken)
         {
-            GroupStats = groupStats;
+            ErrorEvents = errorEvents;
             NextPageToken = nextPageToken;
         }
     }
