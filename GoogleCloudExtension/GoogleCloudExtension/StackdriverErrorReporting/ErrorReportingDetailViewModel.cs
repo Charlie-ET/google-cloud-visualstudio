@@ -47,7 +47,8 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
     {
         public ErrorGroupItem GroupItem { get; private set; }
 
-        public string Stack { get; private set; }
+        public string Stack => GroupItem?.ErrorGroup?.Representative?.Message;
+        public string StakcSummary => GroupItem?.Stack;
 
         public string TimeRanges { get; private set; }
 
@@ -79,7 +80,6 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             GroupItem = errorGroupItem;
             var events = await SerDataSourceInstance.Instance.Value.ListEventsAsync(errorGroupItem.ErrorGroup);
             Debug.Assert(events.ErrorEvents?.Count > 0);
-            Stack = errorGroupItem.Message;
             EventItemCollection = CollectionViewSource.GetDefaultView(events.ErrorEvents.Select(x => new EventItem(x))) as CollectionView;
 
             //  It is necessary to notify the View to update binding sources.
