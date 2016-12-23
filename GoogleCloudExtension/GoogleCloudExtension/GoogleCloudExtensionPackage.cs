@@ -17,6 +17,7 @@ using GoogleCloudExtension.Accounts;
 using GoogleCloudExtension.Analytics;
 using GoogleCloudExtension.Analytics.Events;
 using GoogleCloudExtension.CloudExplorer;
+using GoogleCloudExtension.StackdriverErrorReporting;
 using GoogleCloudExtension.ManageAccounts;
 using GoogleCloudExtension.PublishDialog;
 using GoogleCloudExtension.Utils;
@@ -58,8 +59,8 @@ namespace GoogleCloudExtension
     [ProvideToolWindow(typeof(CloudExplorerToolWindow))]
     [ProvideAutoLoad(UIContextGuids80.NoSolution)]
     [ProvideOptionPage(typeof(AnalyticsOptionsPage), "Google Cloud Tools", "Usage Report", 0, 0, false)]
-    [ProvideToolWindow(typeof(GoogleCloudExtension.StackdriverErrorReporting.ErrorReportingToolWindow))]
-    [ProvideToolWindow(typeof(GoogleCloudExtension.StackdriverErrorReporting.ErrorReportingDetailToolWindow))]
+    [ProvideToolWindow(typeof(ErrorReportingToolWindow), DocumentLikeTool = true, Transient = true)]
+    [ProvideToolWindow(typeof(ErrorReportingDetailToolWindow), DocumentLikeTool = true, Transient = true)]
     public sealed class GoogleCloudExtensionPackage : Package
     {
         private static readonly Lazy<string> s_appVersion = new Lazy<string>(() => Assembly.GetExecutingAssembly().GetName().Version.ToString());
@@ -205,6 +206,8 @@ namespace GoogleCloudExtension
             ManageAccountsCommand.Initialize(this);
             PublishProjectMainMenuCommand.Initialize(this);
             PublishProjectContextMenuCommand.Initialize(this);
+            ErrorReportingToolWindowCommand.Initialize(this);
+            ErrorReportingDetailToolWindowCommand.Initialize(this);
 
             // Activity log utils, to aid in debugging.
             ActivityLogUtils.Initialize(this);
@@ -218,8 +221,6 @@ namespace GoogleCloudExtension
             // Ensure the commands UI state is updated when the GCP project changes.
             CredentialsStore.Default.Reset += (o, e) => ShellUtils.InvalidateCommandsState();
             CredentialsStore.Default.CurrentProjectIdChanged += (o, e) => ShellUtils.InvalidateCommandsState();
-            GoogleCloudExtension.StackdriverErrorReporting.ErrorReportingToolWindowCommand.Initialize(this);
-            GoogleCloudExtension.StackdriverErrorReporting.ErrorReportingDetailToolWindowCommand.Initialize(this);
         }
 
         public static GoogleCloudExtensionPackage Instance { get; private set; }

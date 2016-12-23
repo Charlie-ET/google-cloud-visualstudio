@@ -1347,4 +1347,12 @@
     <value>Project</value>
     <comment>Label for project id label.</comment>
   </data>
+  <data name="ErrorReportingDetailToolWindowCaption" xml:space="preserve">
+    <value>Detail View - Stackdriver Error Reporting</value>
+    <comment>Stackdriver Error Reporting detail view window caption. Let Detail View in the front because the tail might be hidden.</comment>
+  </data>
+  <data name="ErrorReportingToolWindowCaption" xml:space="preserve">
+    <value>Stackdriver Error Reporting</value>
+    <comment>Stackdriver Error Reporting window caption.</comment>
+  </data>
 </root>

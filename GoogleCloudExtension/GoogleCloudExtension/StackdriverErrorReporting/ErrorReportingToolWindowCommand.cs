@@ -4,9 +4,11 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
+using GoogleCloudExtension.Accounts;
+using GoogleCloudExtension.Utils;
 using System;
 using System.ComponentModel.Design;
-using System.Globalization;
+using System.Diagnostics;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -50,9 +52,18 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             if (commandService != null)
             {
                 var menuCommandID = new CommandID(CommandSet, CommandId);
-                var menuItem = new MenuCommand(this.ShowToolWindow, menuCommandID);
+                var menuItem = new OleMenuCommand(this.ShowToolWindow, menuCommandID);
                 commandService.AddCommand(menuItem);
-            }
+                Action setEnabled = () =>
+                {
+                    menuItem.Enabled = (CredentialsStore.Default?.CurrentAccount != null &&
+                        !string.IsNullOrWhiteSpace(CredentialsStore.Default?.CurrentProjectId));
+                };
+
+                setEnabled();
+                menuItem.BeforeQueryStatus += (sender, e) => setEnabled();
+                CredentialsStore.Default.Reset += (sender, e) => CloseWindow();
+            };
         }
 
         /// <summary>
@@ -82,6 +93,31 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         public static void Initialize(Package package)
         {
             Instance = new ErrorReportingToolWindowCommand(package);
+        }
+
+        /// <summary>
+        /// Close the LogsViewerToolWindow when there is no account available.
+        /// </summary>
+        private static void CloseWindow()
+        {
+            ErrorHandlerUtils.HandleExceptions(() =>
+            {
+                // Get the instance number 0 of this tool window. This window is single instance so this instance
+                // is actually the only one.
+                // The last flag is set to true so that if the tool window does not exists it will be created.
+                ToolWindowPane window = GoogleCloudExtensionPackage.Instance.FindToolWindow(
+                    typeof(ErrorReportingToolWindow), 0, false);
+                if (null == window?.Frame)
+                {
+                    Debug.WriteLine("Does not find LogsViewerToolWindow instance.");
+                }
+                else
+                {
+                    IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+                    Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.CloseFrame(
+                        (uint)__FRAMECLOSE.FRAMECLOSE_NoSave));
+                }
+            });
         }
 
         /// <summary>

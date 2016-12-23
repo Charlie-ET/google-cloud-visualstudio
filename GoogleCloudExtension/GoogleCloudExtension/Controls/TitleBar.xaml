@@ -17,8 +17,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Page title bar style. -->
-            <Style x:Key="PageTitleBarStyle" TargetType="{x:Type StackPanel}">
-                <Setter Property="Orientation" Value="Horizontal" />
+            <Style x:Key="PageTitleBarStyle" TargetType="{x:Type Border}">
                 <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.PanelTitleBarKey}}" />
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
             </Style>
@@ -26,7 +25,8 @@
     </UserControl.Resources>
     
     <!-- Title bar. -->
-    <StackPanel Style="{StaticResource PageTitleBarStyle}"
+    <Border Style="{StaticResource PageTitleBarStyle}" Padding="12, 0, 12, 0">
+    <StackPanel Orientation="Horizontal"
                 DataContext="{x:Static acct:CredentialsStore.Default}">
         <Image Margin="0, 0, 6, 0"
                    HorizontalAlignment="Left" 
@@ -50,4 +50,5 @@
                        Style="{StaticResource CommonTextStyle}" 
                        Text="{Binding CurrentProjectId}" />
     </StackPanel>
+    </Border>
 </UserControl>

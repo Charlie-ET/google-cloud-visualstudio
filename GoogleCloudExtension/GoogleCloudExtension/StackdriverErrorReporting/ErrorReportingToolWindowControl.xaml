@@ -69,9 +69,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
-        <control:TitleBar Grid.Row="0"/>
-        
+
+        <control:TitleBar Margin="-12, 0, -12, 0" />
+
         <Grid Grid.Row="1"
               Margin="0, 12, 0, 12" >
             <Grid.ColumnDefinitions>
