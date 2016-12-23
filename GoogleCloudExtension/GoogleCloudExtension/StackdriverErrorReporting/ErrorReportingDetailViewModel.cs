@@ -28,6 +28,21 @@ using System.Linq;
 
 namespace GoogleCloudExtension.StackdriverErrorReporting
 {
+    public class EventItem
+    {
+        private readonly ErrorEvent _error;
+        public string SummaryMessage { get; }
+        public string Message => _error.Message;
+        public object EventTime => _error.EventTime;
+
+        public EventItem(ErrorEvent error)
+        {
+            _error = error;
+            var splits = _error.Message?.Split(new string[] { Environment.NewLine, "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            SummaryMessage = splits?[0];
+        }
+    }
+
     public class ErrorReportingDetailViewModel : ViewModelBase
     {
         public ErrorGroupItem GroupItem { get; private set; }
@@ -37,6 +52,8 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         public string TimeRanges { get; private set; }
 
         public CollectionView EventItemCollection { get; private set; }
+
+        public TimedCountBarChartViewModel BarChartModel => GroupItem?.BarChartModel;
 
         public ErrorReportingDetailViewModel()
         {
@@ -62,16 +79,11 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             GroupItem = errorGroupItem;
             var events = await SerDataSourceInstance.Instance.Value.ListEventsAsync(errorGroupItem.ErrorGroup);
             Debug.Assert(events.ErrorEvents?.Count > 0);
-            Stack = events.ErrorEvents?[0].Message;
-
-
-            // TimeRanges = String.Join(" ", errorGroupItem.ErrorGroup.TimedCounts.Select(x => $"{x.StartTime}-{x.EndTime} {x.Count}"));
-            TimeRanges = String.Join(" ", GenerateFakeRanges().Select(x => $"{x.StartTime}-{x.EndTime} {x.Count}"));
-            EventItemCollection = CollectionViewSource.GetDefaultView(events.ErrorEvents) as CollectionView;
+            Stack = errorGroupItem.Message;
+            EventItemCollection = CollectionViewSource.GetDefaultView(events.ErrorEvents.Select(x => new EventItem(x))) as CollectionView;
 
             //  It is necessary to notify the View to update binding sources.
             RaiseAllPropertyChanged();
-            //RaisePropertyChanged(nameof(EventItemCollection));
         }
     }
 }

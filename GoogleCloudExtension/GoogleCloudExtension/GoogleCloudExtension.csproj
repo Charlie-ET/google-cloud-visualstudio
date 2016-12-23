@@ -246,7 +246,10 @@
     </Compile>
     <Compile Include="StackdriverErrorReporting\ErrorReportingOverViewViewModel.cs" />
     <Compile Include="StackdriverErrorReporting\ErrorGroupItem.cs" />
-    <Compile Include="StackdriverErrorReporting\TimedCountBarCharViewModel.cs" />
+    <Compile Include="StackdriverErrorReporting\TimedCountBarChartViewModel.cs" />
+    <Compile Include="StackdriverErrorReporting\TimedCoutMiniBarChart.xaml.cs">
+      <DependentUpon>TimedCoutMiniBarChart.xaml</DependentUpon>
+    </Compile>
     <Compile Include="StackdriverErrorReporting\TimedCoutBarChart.xaml.cs">
       <DependentUpon>TimedCoutBarChart.xaml</DependentUpon>
     </Compile>
@@ -669,6 +672,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="StackdriverErrorReporting\DetailWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="StackdriverErrorReporting\TimedCoutMiniBarChart.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

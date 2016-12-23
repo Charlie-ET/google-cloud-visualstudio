@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:control="clr-namespace:GoogleCloudExtension.Controls"
+             xmlns:local="clr-namespace:GoogleCloudExtension.StackdriverErrorReporting"             
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
@@ -46,6 +47,18 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
+            <Style x:Key="rowStyle" TargetType="DataGridRow">
+                <Setter Property="TextBlock.TextWrapping" Value="NoWrap" />
+                <Setter Property="TextBlock.FontSize" Value="12" />
+                <Setter Property="BorderThickness" Value="0, 0, 0, 1"/>
+                <Setter Property="BorderBrush" Value="LightGray" />
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#F5F5F5" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
             
         </ResourceDictionary>
     </UserControl.Resources>
@@ -87,10 +100,13 @@
         <DataGrid Grid.Row="2"
                   x:Name="dataGridEventGroup"
                   IsReadOnly="True" 
+                  BorderThickness="0"
+                  GridLinesVisibility="None" 
                   HeadersVisibility="Column"
                   AutoGenerateColumns="False" 
                   ItemsSource="{Binding GroupStatsView}"   
                   CellStyle="{StaticResource cellStyle}"
+                  RowStyle="{StaticResource rowStyle}" 
                   >
             <DataGrid.Resources>
                 <!--DataTemplate for Published Date column defined in Grid.Resources.  PublishDate is a property on the ItemsSource of type DateTime -->
@@ -103,15 +119,23 @@
                         <TextBlock Text="{Binding Stack}" Style="{StaticResource CommonTextStyle}"/>
                     </StackPanel>
                 </DataTemplate>
+                <DataTemplate x:Key="OccurancesTemplate" >
+                    <local:TimedCoutMiniBarChart 
+                        DataContext="{Binding BarChartModel}" 
+                        Margin="0, 6, 0, 6"
+                        Width="90"/>
+                </DataTemplate>                
+                <!-- Override the text highlight color. -->
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" 
+                                     Color="Black"/>
             </DataGrid.Resources>
     
             <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Occurances" 
+                                        CellTemplate="{StaticResource OccurancesTemplate}" />
+
                 <DataGridTextColumn Binding="{Binding Count}"
                                     />
-                
-                <!--<DataGridTextColumn Binding="{Binding Error}"
-                                    Header="Error"
-                                    />-->
 
                 <DataGridTemplateColumn Header="Error" 
                                         CellTemplate="{StaticResource MessageStackTemplate}" />

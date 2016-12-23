@@ -48,7 +48,7 @@ namespace GoogleCloudExtension.DataSources.ErrorReporting
             request.TimeRangePeriod = GroupStatsResource.ListRequest.TimeRangePeriodEnum.PERIOD30DAYS;
             var duration = new Google.Protobuf.WellKnownTypes.Duration();
             duration.Seconds = 24 * 60 * 60;
-            //request.TimedCountDuration = duration;
+            request.TimedCountDuration = "86400s";
             try
             {
                 var response = await request.ExecuteAsync();

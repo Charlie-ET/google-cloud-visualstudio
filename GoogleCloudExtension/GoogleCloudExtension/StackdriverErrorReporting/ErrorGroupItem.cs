@@ -32,12 +32,14 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 
         public ProtectedCommand NavigateDetailCommand { get; }
         public string Error => ErrorGroup.Representative.Message;
-        public long? Count => ErrorGroup.Count;
+        public long Count => ErrorGroup.Count.GetValueOrDefault();
         public object FirstSeen => ErrorGroup.FirstSeenTime;
         public object LastSeen => ErrorGroup.LastSeenTime;
         public object SeenIn => "What is this?";
         public string Message { get; }
         public string Stack { get; }
+
+        public TimedCountBarChartViewModel BarChartModel { get; }
 
         public ErrorGroupItem(ErrorGroupStats errorGroup)
         {
@@ -46,6 +48,7 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             Message = lines?[0];
             Stack = lines?[1];
             NavigateDetailCommand = new ProtectedCommand(NavigateDetail);
+            BarChartModel = new TimedCountBarChartViewModel(errorGroup.TimedCounts);
         }
 
         private void NavigateDetail()

@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:control="clr-namespace:GoogleCloudExtension.Controls"             
+             xmlns:control="clr-namespace:GoogleCloudExtension.Controls"     
+             xmlns:local="clr-namespace:GoogleCloudExtension.StackdriverErrorReporting"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
@@ -14,6 +15,47 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Theming/CommonResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <!--<Style x:Key="rowStyle" TargetType="DataGridRow">
+                <Setter Property="TextBlock.TextWrapping" Value="NoWrap" />
+                <Setter Property="TextBlock.FontSize" Value="12" />
+                <Setter Property="Margin" Value="0, 0, 0, 1"/>
+                --><!--<Setter Property="BorderThickness" Value="0, 0, 0, 0"/>
+                <Setter Property="BorderBrush" Value="LightGray" />
+                <Setter Property="Background" Value="#FFFDFDFD" />--><!--
+            </Style>-->
+            
+            <Style x:Key="cellStyle" TargetType="DataGridCell">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="DataGridCell">
+                            <Border  BorderThickness="0">
+                                <Border x:Name="border" Padding="0, 4, 0, 4" >
+                                    <ContentPresenter />
+                                </Border>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="rowStyle" TargetType="DataGridRow">
+                <Setter Property="TextBlock.TextWrapping" Value="NoWrap" />
+                <Setter Property="TextBlock.FontSize" Value="12" />
+                <Setter Property="Margin" Value="0, 0, 0, 1"/>
+                <Setter Property="BorderThickness" Value="0, 0, 0, 1"/>
+                <Setter Property="BorderBrush" Value="LightGray" />
+                <Setter Property="Background" Value="#FFFDFDFD" />
+                <Style.Triggers>
+                    <Trigger Property="AlternationIndex" Value="1">
+                        <Setter Property="Background" Value="#F5F5F5"/>
+                    </Trigger>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#FFFFD6" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            
         </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel Margin="12, 0, 12, 12">
@@ -43,44 +85,84 @@
             </StackPanel>
         </Grid>
         <Border BorderThickness="1"
-                DataContext="{Binding GroupItem}">
-        <UniformGrid Rows="1" Columns="4" >
-                <StackPanel>
+                DataContext="{Binding GroupItem}"
+                BorderBrush="LightGray"
+                >
+        <UniformGrid Rows="1" Columns="4" 
+                     Margin="12"
+                     >
+                <Border >
+                <StackPanel >
                     <TextBlock Text="Occurances" />
                     <TextBlock Text="{Binding Count}" />
                 </StackPanel>
-                <StackPanel>
-                    <TextBlock Text="Seen in" />
-                    <TextBlock Text="{Binding SeenIn}" />
-                </StackPanel>
-                <StackPanel>
-                    <TextBlock Text="First seen" />
-                    <TextBlock Text="{Binding First Seen}" />
-                </StackPanel>
-                <StackPanel>
-                    <TextBlock Text="Last seen" />
-                    <TextBlock Text="{Binding LastSeen}" />
-                </StackPanel>
+                </Border>
+                <Border BorderThickness="1, 0, 0, 0"
+                        BorderBrush="LightGray"
+                        Padding="6, 0, 0, 0"
+                    >
+                    <StackPanel>
+                        <TextBlock Text="Seen in" />
+                        <TextBlock Text="{Binding SeenIn}" />
+                    </StackPanel>
+                </Border>
+                <Border BorderThickness="1, 0, 0, 0"
+                        BorderBrush="LightGray"
+                        Padding="6, 0, 0, 0"
+                    >
+                    <StackPanel>
+                        <TextBlock Text="First seen" />
+                        <TextBlock Text="{Binding First Seen}" />
+                    </StackPanel>
+                </Border>
+                <Border BorderThickness="1, 0, 0, 0"
+                        BorderBrush="LightGray"
+                        Padding="6, 0, 0, 0"
+                    >
+                    <StackPanel>
+                        <TextBlock Text="Last seen" />
+                        <TextBlock Text="{Binding LastSeen}" />
+                    </StackPanel>
+                </Border>
             </UniformGrid>
-        </Border>    
-        <Canvas Background="Beige" Height="120">
-            <TextBlock Text="{Binding TimeRanges}" />
-        </Canvas>
+        </Border>
+        <local:TimedCoutBarChart DataContext="{Binding BarChartModel}" />
         <StackPanel>
             <TextBlock Text="Stack trace sample" />
             <TextBlock Text="{Binding Stack}" />
+        </StackPanel>
+        <StackPanel>
+            <TextBlock Text="Recent Samples" Style="{StaticResource CommonTextStyle}" Padding="0, 6, 0, 6"/>
         </StackPanel>
         <DataGrid x:Name="DataGridEvents" 
                   ItemsSource="{Binding EventItemCollection}"
                   AutoGenerateColumns="False" 
                   IsReadOnly="True" 
                   HeadersVisibility="Column"    
-                  ColumnHeaderHeight="10"
+                  ColumnHeaderHeight="10"                   
+                  AlternationCount="2" 
+                  GridLinesVisibility="None" 
+                  CellStyle="{StaticResource cellStyle}"
+                  RowStyle="{StaticResource rowStyle}"
+                  BorderThickness="0"
+                  PreviewMouseDown="dataGrid_PreviewMouseDown"
                   >
+            <DataGrid.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" 
+                                     Color="Black"/>
+            </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding EventTime}" />
-                <DataGridTextColumn Binding="{Binding Message}" />
+                <DataGridTextColumn Binding="{Binding SummaryMessage}" />
             </DataGrid.Columns>
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <!-- Use a border to set the background. -->
+                    <Border Background="White" Padding="12, 0, 0 , 2">
+                        <TextBlock Text="{Binding Message}" />
+                    </Border>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
         </DataGrid>
     </StackPanel>
 </UserControl>
