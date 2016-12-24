@@ -18,8 +18,10 @@ using Google.Apis.Clouderrorreporting.v1beta1;
 using Google.Apis.Clouderrorreporting.v1beta1.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GroupStatsResource = Google.Apis.Clouderrorreporting.v1beta1.ProjectsResource.GroupStatsResource;
+using TimeRangeEnum = Google.Apis.Clouderrorreporting.v1beta1.ProjectsResource.GroupStatsResource.ListRequest.TimeRangePeriodEnum;
+using EventTimeRange = Google.Apis.Clouderrorreporting.v1beta1.ProjectsResource.EventsResource.ListRequest.TimeRangePeriodEnum;
 using System.Diagnostics;
+using System;
 
 namespace GoogleCloudExtension.DataSources.ErrorReporting
 {
@@ -41,14 +43,13 @@ namespace GoogleCloudExtension.DataSources.ErrorReporting
             _credential = credential;
         }
 
-        public async Task<GroupStatsRequestResult> ListGroupStatusAsync()
+        public async Task<GroupStatsRequestResult> ListGroupStatusAsync(
+            TimeRangeEnum timeRange, string timedCountDuration)
         {
 
             var request = Service.Projects.GroupStats.List(ProjectIdQuery);
-            request.TimeRangePeriod = GroupStatsResource.ListRequest.TimeRangePeriodEnum.PERIOD30DAYS;
-            var duration = new Google.Protobuf.WellKnownTypes.Duration();
-            duration.Seconds = 24 * 60 * 60;
-            request.TimedCountDuration = "86400s";
+            request.TimeRangePeriod = timeRange;
+            request.TimedCountDuration = timedCountDuration;
             try
             {
                 var response = await request.ExecuteAsync();
@@ -61,15 +62,19 @@ namespace GoogleCloudExtension.DataSources.ErrorReporting
             }
         }
 
-        public async Task<ErrorEventsRequestResult> ListEventsAsync(ErrorGroupStats errorGroup, 
-            ProjectsResource.EventsResource.ListRequest.TimeRangePeriodEnum period 
-            = ProjectsResource.EventsResource.ListRequest.TimeRangePeriodEnum.PERIOD30DAYS)
+        public async Task<ErrorEventsRequestResult> ListEventsAsync(ErrorGroupStats errorGroup,
+            EventTimeRange period = EventTimeRange.PERIOD30DAYS)
         {
             var request = Service.Projects.Events.List(ProjectIdQuery);
             request.TimeRangePeriod = period;
             request.GroupId = errorGroup.Group.GroupId;
             var response = await request.ExecuteAsync();
             return new ErrorEventsRequestResult(response.ErrorEvents, response.NextPageToken);
+        }
+
+        public Task ListEventsAsync(ErrorGroupStats errorGroup, TimeRangeEnum timeRange)
+        {
+            throw new NotImplementedException();
         }
     }
 }

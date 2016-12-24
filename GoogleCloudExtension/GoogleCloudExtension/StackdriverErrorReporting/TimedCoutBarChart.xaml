@@ -7,7 +7,7 @@
              xmlns:utils="clr-namespace:GoogleCloudExtension.Utils;assembly=GoogleCloudExtension.Utils"       
              xmlns:sys="clr-namespace:System;assembly=mscorlib"             
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" 
+             d:DesignHeight="300" d:DesignWidth="600" 
              d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True,Type=local:TimedCountBarChartViewModel}" >
 
     <UserControl.Resources>
@@ -23,7 +23,7 @@
         <StackPanel x:Name="ChartTitle" Margin="12, 6, 0, 12">
             <TextBlock Text="Errors" />
         </StackPanel>
-        <Grid Margin="12, 0, 12, 0">
+        <Grid Margin="12, 0, 24, 0">
             <ItemsControl Panel.ZIndex="10" 
                           ItemsSource="{Binding XLines}"
                           VerticalAlignment="Stretch"
@@ -70,7 +70,6 @@
                                 <Rectangle.ToolTip>
                                     <ToolTip Content="{Binding ToolTipMessage}" 
                                              Style="{StaticResource CommonTooltipStyle}" />
-                                    <!--Visibility="{Binding IsVisible, Converter={StaticResource visibilityConverter}}"/>-->
                                 </Rectangle.ToolTip>
                             </Rectangle>
                             <Line Grid.Row="1"
@@ -78,11 +77,11 @@
                                 Y2="3"
                                 Stroke="Gray"
                                 StrokeThickness="1"
-                                />
+                                Visibility="{Binding ShowYScale, Converter={StaticResource visibilityConverter}}" />
+                            
                             <TextBlock Grid.Row="2"                                        
                                        Margin="0, 0, -30, 0"
                                        Text="{Binding YScale}" />
-                            <!--Visibility="{Binding IsVisible, Converter={StaticResource visibilityConverter}}" />-->
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

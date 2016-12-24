@@ -48,13 +48,11 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 
     public class TimedCountItem : Model
     {
-        //public long ZIndex { get; }
-
-        public bool IsVisible { get; }
-
         private readonly TimedCount _timedCount;
 
         private long Count => _timedCount.Count.GetValueOrDefault();
+
+        public bool ShowYScale { get; }
 
         public string YScale { get; }
 
@@ -67,6 +65,7 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         public TimedCountItem(TimedCount timedCount, bool isYScaleVisible, double heightMultiplier, double countScaleMultiplier)
         {
             _timedCount = timedCount;
+            ShowYScale = isYScaleVisible;
             YScale = isYScaleVisible ? ((DateTime)(timedCount.StartTime)).ToString("MMM-dd") : null;
             BarHeight = (int)(Count * heightMultiplier);
             BarHeightRatio = Count * countScaleMultiplier;
@@ -114,7 +113,7 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             Debug.Assert(timedCounts.Count > 5);
             foreach (var counter in timedCounts)
             {
-                bool isVisible = (k == 0 || k == timedCounts.Count - 1 || k == timedCounts.Count / 3 || k == timedCounts.Count * 2 / 3);
+                bool isVisible = (k == 0 || k == timedCounts.Count - 3 || k == timedCounts.Count / 3 || k == timedCounts.Count * 2 / 3);
                 maxCount = Math.Max(counter.Count.GetValueOrDefault(), maxCount);
                 TimedCountCollection.Add(new TimedCountItem(counter, isVisible, heightMultiplier, countScaleMultiplier));
                 ++k;

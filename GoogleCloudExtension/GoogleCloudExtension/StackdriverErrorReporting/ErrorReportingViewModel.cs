@@ -23,32 +23,53 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Linq;
 
 namespace GoogleCloudExtension.StackdriverErrorReporting
 {
     /// <summary>
     /// The view model for Stackdriver Error Reporting overview Window
     /// </summary>
-    class ErrorReportingOverViewViewModel : ViewModelBase
+    class ErrorReportingViewModel : ViewModelBase
     {
+        static ErrorReportingViewModel()
+        {
+            Instance = new ErrorReportingViewModel();
+        }
+
+        public static ErrorReportingViewModel Instance { get; }
+
+        public TimeRangeButtonsViewModel TimeRangeButtonsModel { get; }
+
         private ObservableCollection<ErrorGroupItem> _groupStatsCollection;
 
         public ListCollectionView GroupStatsView { get; }
 
-        public ErrorReportingOverViewViewModel()
+        public string CurrentTimeRangeCaption => TimeRangeButtonsModel.SelectedTimeRangeItem.Caption;
+
+        public ErrorReportingViewModel()
         {
+            TimeRangeButtonsModel = new TimeRangeButtonsViewModel();
+            TimeRangeButtonsModel.OnTimeRangeChanged += OnTimeRangeChanged;
             _groupStatsCollection = new ObservableCollection<ErrorGroupItem>();
             GroupStatsView = new ListCollectionView(_groupStatsCollection);
             GetGroupStats();
         }
 
-
+        private void OnTimeRangeChanged(object sender, EventArgs v)
+        {
+            GetGroupStats();
+            RaisePropertyChanged(nameof(CurrentTimeRangeCaption));
+        }
 
         private async Task GetGroupStats()
         {
             try
             {
-                var results = await SerDataSourceInstance.Instance.Value.ListGroupStatusAsync();
+                var results = await SerDataSourceInstance.Instance.Value.ListGroupStatusAsync(
+                    TimeRangeButtonsModel.SelectedTimeRangeItem.TimeRange,
+                    TimeRangeButtonsModel.SelectedTimeRangeItem.TimedCountDuration);
+                _groupStatsCollection.Clear();
                 AddItems(results.GroupStats);
             }
             catch (Exception ex)

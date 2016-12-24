@@ -58,12 +58,12 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             {
                 var detailWindow = DetailWindow.Instance;
                 detailWindow.Show();
-                detailWindow.ViewModel.UpdateView(this); 
+                detailWindow.ViewModel.UpdateView(this, ErrorReportingViewModel.Instance.TimeRangeButtonsModel.SelectedTimeRangeItem); 
             }
             else
             {
                 var detailWindow = ErrorReportingDetailToolWindowCommand.ShowWindow();
-                detailWindow.ViewModel.UpdateView(this);
+                detailWindow.ViewModel.UpdateView(this, ErrorReportingViewModel.Instance.TimeRangeButtonsModel.SelectedTimeRangeItem);
             }
         }
     }

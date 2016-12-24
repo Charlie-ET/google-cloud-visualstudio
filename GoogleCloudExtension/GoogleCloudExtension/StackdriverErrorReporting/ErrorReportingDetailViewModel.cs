@@ -45,8 +45,11 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 
     public class ErrorReportingDetailViewModel : ViewModelBase
     {
+        public TimeRangeButtonsViewModel TimeRangeButtonsModel { get; }
+
         public ErrorGroupItem GroupItem { get; private set; }
 
+        public string Message => GroupItem?.Message;
         public string Stack => GroupItem?.ErrorGroup?.Representative?.Message;
         public string StakcSummary => GroupItem?.Stack;
 
@@ -58,6 +61,8 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 
         public ErrorReportingDetailViewModel()
         {
+            TimeRangeButtonsModel = new TimeRangeButtonsViewModel();
+            TimeRangeButtonsModel.OnTimeRangeChanged += (s, e) => UpdateView();
         }
 
         private IList<TimedCount> GenerateFakeRanges()
@@ -75,12 +80,24 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             return tCounts;
         }
 
-        public async void UpdateView(ErrorGroupItem errorGroupItem)
+        public void UpdateView(ErrorGroupItem errorGroupItem, TimeRangeItem selectedTimeRangeItem)
         {
             GroupItem = errorGroupItem;
-            var events = await SerDataSourceInstance.Instance.Value.ListEventsAsync(errorGroupItem.ErrorGroup);
-            Debug.Assert(events.ErrorEvents?.Count > 0);
-            EventItemCollection = CollectionViewSource.GetDefaultView(events.ErrorEvents.Select(x => new EventItem(x))) as CollectionView;
+            if (selectedTimeRangeItem.TimeRange == TimeRangeButtonsModel.SelectedTimeRangeItem.TimeRange)
+            {
+                UpdateView();
+            }
+            else
+            {
+                // This will end up calling UpdateView() too. 
+                TimeRangeButtonsModel.OnTimeRangeCommand(TimeRangeButtonsModel.TimeRanges.First(x => x.TimeRange == selectedTimeRangeItem.TimeRange));
+            }
+        }
+
+        public async void UpdateView()
+        {
+            var events = await SerDataSourceInstance.Instance.Value.ListEventsAsync(GroupItem.ErrorGroup, TimeRangeButtonsModel.SelectedTimeRangeItem.EventTimeRange);
+            EventItemCollection = CollectionViewSource.GetDefaultView(events.ErrorEvents?.Select(x => new EventItem(x))) as CollectionView;
 
             //  It is necessary to notify the View to update binding sources.
             RaiseAllPropertyChanged();

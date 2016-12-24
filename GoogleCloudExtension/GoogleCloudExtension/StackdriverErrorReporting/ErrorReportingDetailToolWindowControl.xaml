@@ -5,27 +5,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:control="clr-namespace:GoogleCloudExtension.Controls"     
              xmlns:local="clr-namespace:GoogleCloudExtension.StackdriverErrorReporting"
+             xmlns:utils="clr-namespace:GoogleCloudExtension.Utils;assembly=GoogleCloudExtension.Utils"       
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="800"
-             Name="MyToolWindow">
+             d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True,Type=local:ErrorReportingDetailViewModel}" >
+
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Theming/CommonResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <!--<Style x:Key="rowStyle" TargetType="DataGridRow">
-                <Setter Property="TextBlock.TextWrapping" Value="NoWrap" />
-                <Setter Property="TextBlock.FontSize" Value="12" />
-                <Setter Property="Margin" Value="0, 0, 0, 1"/>
-                --><!--<Setter Property="BorderThickness" Value="0, 0, 0, 0"/>
-                <Setter Property="BorderBrush" Value="LightGray" />
-                <Setter Property="Background" Value="#FFFDFDFD" />--><!--
-            </Style>-->
-            
-            <Style x:Key="cellStyle" TargetType="DataGridCell">
+            <utils:VisibilityConverter x:Key="visibilityConverter" />
+
+                <Style x:Key="cellStyle" TargetType="DataGridCell">
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="DataGridCell">
@@ -55,7 +50,13 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-            
+
+            <Style x:Key="BorderCommonStyle" TargetType="Border" >
+                <Setter Property="BorderBrush" Value="LightGray" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Margin" Value="0, 6, 0, 6" />
+            </Style>
+
         </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel Margin="12, 0, 12, 12">
@@ -64,31 +65,22 @@
         <Grid Grid.Row="1"
               Margin="0, 12, 0, 12" >
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock 
-                Grid.Column="0"
-                Text="Errors in the last 6 hours" 
+                Grid.Column="0"                
+                Margin="0, 0, 36, 0"
+                Text="{Binding Message}"
                 Style="{StaticResource CommonTextStyle}"/>
-            <Border Grid.Column="1" HorizontalAlignment="Stretch"/>
-            <StackPanel Grid.Column="2"
-                        Orientation="Horizontal">
-                <StackPanel.Resources>
-                    <Style TargetType="Button" BasedOn="{StaticResource CommonButtonStandardStyle}">
-                        <Setter Property="Margin" Value="0, 0, 6, 0" />
-                    </Style>
-                </StackPanel.Resources>
-                <Button>1 hour</Button>
-                <Button>6 hours</Button>
-                <Button>1 day</Button>
-            </StackPanel>
+            <local:TimeRangeButtons 
+                Grid.Column="2" 
+                DataContext="{Binding TimeRangeButtonsModel}" />
+
         </Grid>
-        <Border BorderThickness="1"
-                DataContext="{Binding GroupItem}"
-                BorderBrush="LightGray"
-                >
+        
+        <Border Style="{StaticResource BorderCommonStyle}"
+                DataContext="{Binding GroupItem}">
         <UniformGrid Rows="1" Columns="4" 
                      Margin="12"
                      >
@@ -127,12 +119,27 @@
                 </Border>
             </UniformGrid>
         </Border>
-        <local:TimedCoutBarChart DataContext="{Binding BarChartModel}" />
-        <StackPanel>
-            <TextBlock Text="Stack trace sample" />
-            <TextBlock Text="{Binding Stack}" />
-        </StackPanel>
-        <StackPanel>
+        <Border Style="{StaticResource BorderCommonStyle}">
+            <local:TimedCoutBarChart DataContext="{Binding BarChartModel}" />
+        </Border>
+
+        <Border Style="{StaticResource BorderCommonStyle}" >
+            <StackPanel Margin="6">
+                <StackPanel Orientation="Horizontal">
+                    <ToggleButton 
+                        Margin="0, 0, 12, 0"
+                        x:Name="traceSampleToggle"
+                        IsChecked="True" Content="V" Padding="2, 0, 2, 0"/>
+                    <TextBlock Text="Stack trace sample" />
+                </StackPanel>
+                <TextBlock Text="{Binding Stack}" 
+                           Visibility="{Binding IsChecked, ElementName=traceSampleToggle, 
+                    Converter={StaticResource visibilityConverter}}" />
+ 
+            </StackPanel>
+        </Border>
+
+        <StackPanel Margin="0, 12, 0, 6">
             <TextBlock Text="Recent Samples" Style="{StaticResource CommonTextStyle}" Padding="0, 6, 0, 6"/>
         </StackPanel>
         <DataGrid x:Name="DataGridEvents" 

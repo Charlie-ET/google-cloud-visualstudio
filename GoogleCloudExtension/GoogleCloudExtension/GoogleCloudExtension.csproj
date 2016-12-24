@@ -244,7 +244,7 @@
     <Compile Include="StackdriverErrorReporting\ErrorReportingToolWindowControl.xaml.cs">
       <DependentUpon>ErrorReportingToolWindowControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="StackdriverErrorReporting\ErrorReportingOverViewViewModel.cs" />
+    <Compile Include="StackdriverErrorReporting\ErrorReportingViewModel.cs" />
     <Compile Include="StackdriverErrorReporting\ErrorGroupItem.cs" />
     <Compile Include="StackdriverErrorReporting\TimedCountBarChartViewModel.cs" />
     <Compile Include="StackdriverErrorReporting\TimedCoutMiniBarChart.xaml.cs">
@@ -253,6 +253,11 @@
     <Compile Include="StackdriverErrorReporting\TimedCoutBarChart.xaml.cs">
       <DependentUpon>TimedCoutBarChart.xaml</DependentUpon>
     </Compile>
+    <Compile Include="StackdriverErrorReporting\TimeRangeButtons.xaml.cs">
+      <DependentUpon>TimeRangeButtons.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StackdriverErrorReporting\TimeRangeButtonsViewModel.cs" />
+    <Compile Include="StackdriverErrorReporting\TimeRangeItem.cs" />
     <Compile Include="TerminalServer\TerminalServerManager.cs" />
     <Compile Include="SolutionUtils\ISolutionProject.cs" />
     <Compile Include="SolutionUtils\SolutionHelper.cs" />
@@ -680,6 +685,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="StackdriverErrorReporting\TimedCoutBarChart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StackdriverErrorReporting\TimeRangeButtons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
