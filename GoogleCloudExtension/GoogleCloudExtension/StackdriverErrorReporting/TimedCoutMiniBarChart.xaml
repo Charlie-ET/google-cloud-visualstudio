@@ -23,6 +23,8 @@
                 <DataTemplate>
                     <Rectangle Grid.Row="0"                                
                                VerticalAlignment="Bottom" 
+                               Width="3"
+                               Margin="1, 0, 0, 0"
                                Fill="Blue">
                         <Rectangle.Height>
                             <Binding Path="BarHeightRatio" Converter="{StaticResource multiplyConverter}"  

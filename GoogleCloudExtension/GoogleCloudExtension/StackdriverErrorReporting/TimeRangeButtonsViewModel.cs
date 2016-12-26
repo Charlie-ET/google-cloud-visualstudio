@@ -31,7 +31,20 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 {
     public class TimeRangeButtonsViewModel : ViewModelBase
     {
-        public TimeRangeItem SelectedTimeRangeItem { get; set; }
+        private TimeRangeItem _selectedTimeRangeItem;
+        public TimeRangeItem SelectedTimeRangeItem
+        {
+            get { return _selectedTimeRangeItem; }
+            set
+            {
+                if (_selectedTimeRangeItem != value)
+                {
+                    _selectedTimeRangeItem.IsCurrentSelection = false;
+                    _selectedTimeRangeItem = value;
+                    _selectedTimeRangeItem.IsCurrentSelection = true;
+                }
+            }
+        }
 
         public List<TimeRangeItem> TimeRanges { get; }
 
@@ -45,17 +58,15 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             TimeRanges.Add(new TimeRangeItem(OnTimeRangeCommand, "1 day", $"{24*60*60/30}s", TimeRangeEnum.PERIOD1DAY, EventTimeRangeEnum.PERIOD1DAY));
             TimeRanges.Add(new TimeRangeItem(OnTimeRangeCommand, "7 days", $"{7*24*60*60/30}s", TimeRangeEnum.PERIOD1WEEK, EventTimeRangeEnum.PERIOD1WEEK));
             TimeRanges.Add(new TimeRangeItem(OnTimeRangeCommand, "30 days", $"{24*60*60}s", TimeRangeEnum.PERIOD30DAYS, EventTimeRangeEnum.PERIOD30DAYS));
-            SelectedTimeRangeItem = TimeRanges.Last();
-            SelectedTimeRangeItem.IsCurrentSelection = true;
+            _selectedTimeRangeItem = TimeRanges.Last();
+            _selectedTimeRangeItem.IsCurrentSelection = true;
         }
 
         public void OnTimeRangeCommand(TimeRangeItem timeRangeItem)
         {
             if (SelectedTimeRangeItem != timeRangeItem)
             {
-                SelectedTimeRangeItem.IsCurrentSelection = false;
                 SelectedTimeRangeItem = timeRangeItem;
-                SelectedTimeRangeItem.IsCurrentSelection = true;
                 OnTimeRangeChanged?.Invoke(this, new EventArgs());
             }
         }

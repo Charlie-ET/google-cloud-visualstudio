@@ -23,12 +23,13 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using EventGroupTimeRangeEnum = Google.Apis.Clouderrorreporting.v1beta1.ProjectsResource.GroupStatsResource.ListRequest.TimeRangePeriodEnum;
 
 namespace GoogleCloudExtension.StackdriverErrorReporting
 {
     public class ErrorGroupItem : Model
     {
-        public ErrorGroupStats ErrorGroup { get; }
+        public ErrorGroupStats ErrorGroup { get; set; }
 
         public ProtectedCommand NavigateDetailCommand { get; }
         public string Error => ErrorGroup.Representative.Message;
@@ -39,10 +40,14 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         public string Message { get; }
         public string Stack { get; }
 
+        // TODO: not necessary?  remove.
+        public EventGroupTimeRangeEnum EventGroupTimeRange { get; }
+
         public TimedCountBarChartViewModel BarChartModel { get; }
 
-        public ErrorGroupItem(ErrorGroupStats errorGroup)
+        public ErrorGroupItem(ErrorGroupStats errorGroup, EventGroupTimeRangeEnum groupTimeRange)
         {
+            EventGroupTimeRange = groupTimeRange;
             ErrorGroup = errorGroup;
             string[] lines = ErrorGroup.Representative.Message.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
             Message = lines?[0];

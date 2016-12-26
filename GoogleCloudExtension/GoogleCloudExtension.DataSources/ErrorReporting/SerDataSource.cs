@@ -44,12 +44,13 @@ namespace GoogleCloudExtension.DataSources.ErrorReporting
         }
 
         public async Task<GroupStatsRequestResult> ListGroupStatusAsync(
-            TimeRangeEnum timeRange, string timedCountDuration)
+            TimeRangeEnum timeRange, string timedCountDuration, string groupId = null)
         {
 
             var request = Service.Projects.GroupStats.List(ProjectIdQuery);
             request.TimeRangePeriod = timeRange;
             request.TimedCountDuration = timedCountDuration;
+            request.GroupId = groupId;
             try
             {
                 var response = await request.ExecuteAsync();

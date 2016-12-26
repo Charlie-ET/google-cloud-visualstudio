@@ -59,6 +59,8 @@
 
         </ResourceDictionary>
     </UserControl.Resources>
+    
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
     <StackPanel Margin="12, 0, 12, 12">
         <control:TitleBar Margin="-12, 0, -12, 0" />
         
@@ -71,7 +73,7 @@
             <TextBlock 
                 Grid.Column="0"                
                 Margin="0, 0, 36, 0"
-                FontSize="15"
+                FontWeight="DemiBold"
                 Text="{Binding Message}"
                 Style="{StaticResource CommonTextStyle}"/>
             <local:TimeRangeButtons 
@@ -174,4 +176,5 @@
             </DataGrid.RowDetailsTemplate>
         </DataGrid>
     </StackPanel>
+    </ScrollViewer>
 </UserControl>

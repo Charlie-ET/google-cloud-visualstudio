@@ -62,7 +62,7 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         public ErrorReportingDetailViewModel()
         {
             TimeRangeButtonsModel = new TimeRangeButtonsViewModel();
-            TimeRangeButtonsModel.OnTimeRangeChanged += (s, e) => UpdateView();
+            TimeRangeButtonsModel.OnTimeRangeChanged += (s, e) => UpdateGroupAndEventAsync();
         }
 
         private IList<TimedCount> GenerateFakeRanges()
@@ -85,22 +85,51 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             GroupItem = errorGroupItem;
             if (selectedTimeRangeItem.TimeRange == TimeRangeButtonsModel.SelectedTimeRangeItem.TimeRange)
             {
-                UpdateView();
+                UpdateEventAsync();
+                RaiseAllPropertyChanged();
             }
             else
             {
                 // This will end up calling UpdateView() too. 
-                TimeRangeButtonsModel.OnTimeRangeCommand(TimeRangeButtonsModel.TimeRanges.First(x => x.TimeRange == selectedTimeRangeItem.TimeRange));
+                TimeRangeButtonsModel.SelectedTimeRangeItem = TimeRangeButtonsModel.TimeRanges.First(x => x.TimeRange == selectedTimeRangeItem.TimeRange);
+                UpdateGroupAndEventAsync();
             }
         }
 
-        public async void UpdateView()
+        private async Task UpdateEventGroupAsync()
         {
-            var events = await SerDataSourceInstance.Instance.Value.ListEventsAsync(GroupItem.ErrorGroup, TimeRangeButtonsModel.SelectedTimeRangeItem.EventTimeRange);
-            EventItemCollection = CollectionViewSource.GetDefaultView(events.ErrorEvents?.Select(x => new EventItem(x))) as CollectionView;
+            var groups = await SerDataSourceInstance.Instance.Value.ListGroupStatusAsync(
+                TimeRangeButtonsModel.SelectedTimeRangeItem.TimeRange,
+                TimeRangeButtonsModel.SelectedTimeRangeItem.TimedCountDuration,
+                GroupItem.ErrorGroup.Group.GroupId);
+            if (groups.GroupStats.Count > 0)
+            {
+                GroupItem = new ErrorGroupItem(groups.GroupStats?[0], TimeRangeButtonsModel.SelectedTimeRangeItem.TimeRange);
+            }
+            else
+            {
+                GroupItem.ErrorGroup.TimedCounts = null;
+            }
 
-            //  It is necessary to notify the View to update binding sources.
             RaiseAllPropertyChanged();
+        }
+
+        private async Task UpdateEventAsync()
+        {
+            EventItemCollection = null;
+            if (GroupItem != null)
+            {
+                var events = await SerDataSourceInstance.Instance.Value.ListEventsAsync(GroupItem.ErrorGroup, TimeRangeButtonsModel.SelectedTimeRangeItem.EventTimeRange);
+                EventItemCollection = CollectionViewSource.GetDefaultView(events.ErrorEvents?.Select(x => new EventItem(x))) as CollectionView;
+            }
+
+            RaisePropertyChanged(nameof(EventItemCollection));
+        }
+
+        private async void UpdateGroupAndEventAsync()
+        {
+            await UpdateEventGroupAsync();
+            await UpdateEventAsync();
         }
     }
 }

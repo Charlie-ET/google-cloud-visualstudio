@@ -48,7 +48,7 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="DataGridCell">
                             <Border  BorderThickness="0">
-                                <Border x:Name="border" Padding="0, 4, 0, 4" >
+                                <Border x:Name="border" Padding="3, 4, 3, 4" >
                                     <ContentPresenter />
                                 </Border>
                             </Border>
@@ -127,8 +127,7 @@
                 <DataTemplate x:Key="OccurancesTemplate" >
                     <local:TimedCoutMiniBarChart 
                         DataContext="{Binding BarChartModel}" 
-                        Margin="0, 6, 0, 6"
-                        Width="90"/>
+                        Margin="0, 6, 0, 6" />
                 </DataTemplate>                
                 <!-- Override the text highlight color. -->
                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" 
@@ -142,6 +141,7 @@
                 <DataGridTextColumn Binding="{Binding Count}" />
 
                 <DataGridTemplateColumn Header="Error" 
+                                        Width="460"
                                         CellTemplate="{StaticResource MessageStackTemplate}" />
 
                 <DataGridTextColumn Binding="{Binding SeenIn}" 
