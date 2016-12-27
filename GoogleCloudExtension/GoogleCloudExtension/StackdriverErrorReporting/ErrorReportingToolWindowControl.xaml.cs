@@ -40,4 +40,4 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             DataContext = ErrorReportingViewModel.Instance;
         }
     }
-}               
+}    

@@ -18,9 +18,9 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
     /// <summary>
     /// Interaction logic for TimedCoutBarChart.xaml
     /// </summary>
-    public partial class TimedCoutBarChart : UserControl
+    public partial class TimedCountBarChart : UserControl
     {
-        public TimedCoutBarChart()
+        public TimedCountBarChart()
         {
             InitializeComponent();
         }

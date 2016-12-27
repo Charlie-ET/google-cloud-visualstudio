@@ -37,6 +37,14 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             Instance = new ErrorReportingViewModel();
         }
 
+        private bool isLoading;
+
+        public bool IsLoadingComplete
+        {
+            get { return !isLoading; }
+            set { SetValueAndRaise(ref isLoading, !value); }
+        }
+
         public static ErrorReportingViewModel Instance { get; }
 
         public TimeRangeButtonsViewModel TimeRangeButtonsModel { get; }
@@ -64,18 +72,25 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 
         private async Task GetGroupStats()
         {
+            IsLoadingComplete = false;
+            _groupStatsCollection.Clear();
+            GroupStatsRequestResult results = null;
             try
             {
-                var results = await SerDataSourceInstance.Instance.Value.ListGroupStatusAsync(
+                results = await SerDataSourceInstance.Instance.Value.ListGroupStatusAsync(
                     TimeRangeButtonsModel.SelectedTimeRangeItem.TimeRange,
                     TimeRangeButtonsModel.SelectedTimeRangeItem.TimedCountDuration);
-                _groupStatsCollection.Clear();
-                AddItems(results.GroupStats);
             }
             catch (Exception ex)
             {
                 
             }
+            finally
+            {
+                IsLoadingComplete = true;
+            }
+
+            AddItems(results?.GroupStats);
         }
 
         private void AddItems(IList<ErrorGroupStats> groupStats)

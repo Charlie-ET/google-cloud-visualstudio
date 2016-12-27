@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:control="clr-namespace:GoogleCloudExtension.Controls"
-             xmlns:local="clr-namespace:GoogleCloudExtension.StackdriverErrorReporting"             
+             xmlns:local="clr-namespace:GoogleCloudExtension.StackdriverErrorReporting"    
+             xmlns:utils="clr-namespace:GoogleCloudExtension.Utils;assembly=GoogleCloudExtension.Utils"             
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
@@ -82,7 +83,9 @@
         <control:TitleBar Margin="-12, 0, -12, 0" />
 
         <Grid Grid.Row="1"
-              Margin="0, 12, 0, 12" >
+              Margin="0, 12, 0, 12" 
+              IsEnabled="{Binding IsLoadingComplete}"
+              >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto"/>
@@ -102,6 +105,7 @@
         </Grid>
 
         <DataGrid Grid.Row="2"
+                  Panel.ZIndex="5"
                   x:Name="dataGridEventGroup"
                   IsReadOnly="True" 
                   BorderThickness="0"
@@ -111,6 +115,7 @@
                   ItemsSource="{Binding GroupStatsView}"   
                   CellStyle="{StaticResource cellStyle}"
                   RowStyle="{StaticResource rowStyle}" 
+                  IsEnabled="{Binding IsLoadingComplete}"
                   >
             <DataGrid.Resources>
                 <!--DataTemplate for Published Date column defined in Grid.Resources.  PublishDate is a property on the ItemsSource of type DateTime -->
@@ -125,15 +130,15 @@
                     </StackPanel>
                 </DataTemplate>
                 <DataTemplate x:Key="OccurancesTemplate" >
-                    <local:TimedCoutMiniBarChart 
+                    <local:TimedCountMiniBarChart 
                         DataContext="{Binding BarChartModel}" 
                         Margin="0, 6, 0, 6" />
-                </DataTemplate>                
+                </DataTemplate>
                 <!-- Override the text highlight color. -->
-                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" 
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" 
                                      Color="Black"/>
             </DataGrid.Resources>
-    
+
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Occurances" 
                                         CellTemplate="{StaticResource OccurancesTemplate}" />
@@ -165,7 +170,16 @@
                                     />
 
             </DataGrid.Columns>
-
         </DataGrid>
+
+        <control:ProgressIndicator 
+            Grid.Row="2"
+            Panel.ZIndex="10"
+            Margin="0, 60, 0, 0"
+            HorizontalAlignment="Center"                       
+            VerticalAlignment="Top" 
+            FullDuration="1000"
+            Visibility="{Binding IsLoadingComplete, Converter={utils:VisibilityConverter IsNegated=True}}" >
+        </control:ProgressIndicator>
     </Grid>
 </UserControl>

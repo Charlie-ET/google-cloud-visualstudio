@@ -247,11 +247,11 @@
     <Compile Include="StackdriverErrorReporting\ErrorReportingViewModel.cs" />
     <Compile Include="StackdriverErrorReporting\ErrorGroupItem.cs" />
     <Compile Include="StackdriverErrorReporting\TimedCountBarChartViewModel.cs" />
-    <Compile Include="StackdriverErrorReporting\TimedCoutMiniBarChart.xaml.cs">
-      <DependentUpon>TimedCoutMiniBarChart.xaml</DependentUpon>
+    <Compile Include="StackdriverErrorReporting\TimedCountMiniBarChart.xaml.cs">
+      <DependentUpon>TimedCountMiniBarChart.xaml</DependentUpon>
     </Compile>
-    <Compile Include="StackdriverErrorReporting\TimedCoutBarChart.xaml.cs">
-      <DependentUpon>TimedCoutBarChart.xaml</DependentUpon>
+    <Compile Include="StackdriverErrorReporting\TimedCountBarChart.xaml.cs">
+      <DependentUpon>TimedCountBarChart.xaml</DependentUpon>
     </Compile>
     <Compile Include="StackdriverErrorReporting\TimeRangeButtons.xaml.cs">
       <DependentUpon>TimeRangeButtons.xaml</DependentUpon>
@@ -680,11 +680,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="StackdriverErrorReporting\TimedCoutMiniBarChart.xaml">
+    <Page Include="StackdriverErrorReporting\TimedCountMiniBarChart.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="StackdriverErrorReporting\TimedCoutBarChart.xaml">
+    <Page Include="StackdriverErrorReporting\TimedCountBarChart.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -55,7 +55,7 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             NavigateDetailCommand = new ProtectedCommand(NavigateDetail);
             BarChartModel = new TimedCountBarChartViewModel(errorGroup.TimedCounts);
         }
-
+        
         private void NavigateDetail()
         {
             Debug.WriteLine($"{Message} is clicked");

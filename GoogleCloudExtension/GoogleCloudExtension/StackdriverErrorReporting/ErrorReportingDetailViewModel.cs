@@ -45,6 +45,28 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 
     public class ErrorReportingDetailViewModel : ViewModelBase
     {
+        private bool isGroupLoading;
+        private bool isEventLoading;
+        private bool isControlEnabled = true;
+
+        public bool IsControlEnabled
+        {
+            get { return isControlEnabled; }
+            set { SetValueAndRaise(ref isControlEnabled, value); }
+        }
+
+        public bool IsGroupLoading
+        {
+            get { return isGroupLoading; }
+            set { SetValueAndRaise(ref isGroupLoading, value); }
+        }
+
+        public bool IsEventLoading
+        {
+            get { return isEventLoading; }
+            set { SetValueAndRaise(ref isEventLoading, value); }
+        }
+
         public TimeRangeButtonsViewModel TimeRangeButtonsModel { get; }
 
         public ErrorGroupItem GroupItem { get; private set; }
@@ -98,17 +120,25 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 
         private async Task UpdateEventGroupAsync()
         {
-            var groups = await SerDataSourceInstance.Instance.Value.ListGroupStatusAsync(
-                TimeRangeButtonsModel.SelectedTimeRangeItem.TimeRange,
-                TimeRangeButtonsModel.SelectedTimeRangeItem.TimedCountDuration,
-                GroupItem.ErrorGroup.Group.GroupId);
-            if (groups.GroupStats.Count > 0)
+            IsGroupLoading = true;
+            try
             {
-                GroupItem = new ErrorGroupItem(groups.GroupStats?[0], TimeRangeButtonsModel.SelectedTimeRangeItem.TimeRange);
+                var groups = await SerDataSourceInstance.Instance.Value.ListGroupStatusAsync(
+                    TimeRangeButtonsModel.SelectedTimeRangeItem.TimeRange,
+                    TimeRangeButtonsModel.SelectedTimeRangeItem.TimedCountDuration,
+                    GroupItem.ErrorGroup.Group.GroupId);
+                if (groups.GroupStats.Count > 0)
+                {
+                    GroupItem = new ErrorGroupItem(groups.GroupStats?[0], TimeRangeButtonsModel.SelectedTimeRangeItem.TimeRange);
+                }
+                else
+                {
+                    GroupItem.ErrorGroup.TimedCounts = null;
+                }
             }
-            else
+            finally
             {
-                GroupItem.ErrorGroup.TimedCounts = null;
+                IsGroupLoading = false;
             }
 
             RaiseAllPropertyChanged();
@@ -117,10 +147,21 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         private async Task UpdateEventAsync()
         {
             EventItemCollection = null;
+            RaisePropertyChanged(nameof(EventItemCollection));
             if (GroupItem != null)
             {
-                var events = await SerDataSourceInstance.Instance.Value.ListEventsAsync(GroupItem.ErrorGroup, TimeRangeButtonsModel.SelectedTimeRangeItem.EventTimeRange);
-                EventItemCollection = CollectionViewSource.GetDefaultView(events.ErrorEvents?.Select(x => new EventItem(x))) as CollectionView;
+                IsEventLoading = true;
+                IsControlEnabled = false;
+                try
+                {
+                    var events = await SerDataSourceInstance.Instance.Value.ListEventsAsync(GroupItem.ErrorGroup, TimeRangeButtonsModel.SelectedTimeRangeItem.EventTimeRange);
+                    EventItemCollection = CollectionViewSource.GetDefaultView(events.ErrorEvents?.Select(x => new EventItem(x))) as CollectionView;
+                }
+                finally
+                {
+                    IsEventLoading = false;
+                    IsControlEnabled = true;
+                }
             }
 
             RaisePropertyChanged(nameof(EventItemCollection));
@@ -128,8 +169,16 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 
         private async void UpdateGroupAndEventAsync()
         {
-            await UpdateEventGroupAsync();
-            await UpdateEventAsync();
+            IsControlEnabled = false;
+            try
+            {
+                await UpdateEventGroupAsync();
+                await UpdateEventAsync();
+            }
+            finally
+            {
+                IsControlEnabled = true;
+            }
         }
     }
 }
