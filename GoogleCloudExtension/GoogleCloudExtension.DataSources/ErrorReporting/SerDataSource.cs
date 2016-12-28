@@ -30,8 +30,6 @@ namespace GoogleCloudExtension.DataSources.ErrorReporting
     /// </summary>
     public class SerDataSource : DataSourceBase<ClouderrorreportingService>
     {
-        private readonly GoogleCredential _credential;
-
         /// <summary>
         /// Initializes an instance of <seealso cref="SerDataSource"/> class.
         /// </summary>
@@ -39,9 +37,7 @@ namespace GoogleCloudExtension.DataSources.ErrorReporting
         /// <param name="credential">The credentials to use for the call.</param>
         public SerDataSource(string projectId, GoogleCredential credential, string appName)
                 : base(projectId, credential, init => new ClouderrorreportingService(init), appName)
-        {
-            _credential = credential;
-        }
+        {}
 
         public async Task<GroupStatsRequestResult> ListGroupStatusAsync(
             TimeRangeEnum timeRange, string timedCountDuration, string groupId = null)
@@ -58,7 +54,7 @@ namespace GoogleCloudExtension.DataSources.ErrorReporting
             }
             catch (GoogleApiException ex)
             {
-                Debug.WriteLine($"Failed to get log entries: {ex.Message}");
+                Debug.WriteLine($"Failed to get GroupStats: {ex.Message}");
                 throw new DataSourceException(ex.Message, ex);
             }
         }
@@ -69,13 +65,16 @@ namespace GoogleCloudExtension.DataSources.ErrorReporting
             var request = Service.Projects.Events.List(ProjectIdQuery);
             request.TimeRangePeriod = period;
             request.GroupId = errorGroup.Group.GroupId;
-            var response = await request.ExecuteAsync();
-            return new ErrorEventsRequestResult(response.ErrorEvents, response.NextPageToken);
-        }
-
-        public Task ListEventsAsync(ErrorGroupStats errorGroup, TimeRangeEnum timeRange)
-        {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await request.ExecuteAsync();
+                return new ErrorEventsRequestResult(response.ErrorEvents, response.NextPageToken);
+            }
+            catch (GoogleApiException ex)
+            {
+                Debug.WriteLine($"Failed to get ErrorEvents: {ex.Message}");
+                throw new DataSourceException(ex.Message, ex);
+            }
         }
     }
 }

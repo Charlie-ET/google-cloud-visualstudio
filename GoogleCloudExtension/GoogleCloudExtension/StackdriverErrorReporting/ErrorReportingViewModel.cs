@@ -14,6 +14,7 @@
 
 using Google.Apis.Clouderrorreporting.v1beta1.Data;
 using GoogleCloudExtension.Accounts;
+using GoogleCloudExtension.DataSources;
 using GoogleCloudExtension.DataSources.ErrorReporting;
 using GoogleCloudExtension.Utils;
 using System;
@@ -38,6 +39,21 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         }
 
         private bool isLoading;
+
+        private bool _showException;
+        private string _exceptionString;
+
+        public string ExceptionString
+        {
+            get { return _exceptionString; }
+            set { SetValueAndRaise(ref _exceptionString, value); }
+        }
+
+        public bool ShowException
+        {
+            get { return _showException; }
+            set { SetValueAndRaise(ref _showException, value); }
+        }
 
         public bool IsLoadingComplete
         {
@@ -75,15 +91,17 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             IsLoadingComplete = false;
             _groupStatsCollection.Clear();
             GroupStatsRequestResult results = null;
+            ShowException = false;
             try
             {
                 results = await SerDataSourceInstance.Instance.Value.ListGroupStatusAsync(
                     TimeRangeButtonsModel.SelectedTimeRangeItem.TimeRange,
                     TimeRangeButtonsModel.SelectedTimeRangeItem.TimedCountDuration);
             }
-            catch (Exception ex)
+            catch (DataSourceException ex)
             {
-                
+                ShowException = true;
+                ExceptionString = ex.ToString();       
             }
             finally
             {

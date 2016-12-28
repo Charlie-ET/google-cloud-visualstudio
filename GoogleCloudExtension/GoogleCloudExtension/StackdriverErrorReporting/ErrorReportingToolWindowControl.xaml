@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:control="clr-namespace:GoogleCloudExtension.Controls"
              xmlns:local="clr-namespace:GoogleCloudExtension.StackdriverErrorReporting"    
-             xmlns:utils="clr-namespace:GoogleCloudExtension.Utils;assembly=GoogleCloudExtension.Utils"             
+             xmlns:utils="clr-namespace:GoogleCloudExtension.Utils;assembly=GoogleCloudExtension.Utils"      
+             xmlns:mp="clr-namespace:GoogleCloudExtension.Extensions"                     
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
@@ -70,6 +71,15 @@
                 </Style.Triggers>
             </Style>
 
+            <Style TargetType="control:ImageToggleButton" x:Key="checkedToggle">
+                <Setter Property="Background" Value="Transparent"/>
+                <Style.Triggers>
+                    <Trigger Property="IsChecked" Value="True">
+                        <Setter Property="Background" Value="#EEEEEE" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            
         </ResourceDictionary>
     </UserControl.Resources>
     
@@ -77,12 +87,36 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <control:TitleBar Margin="-12, 0, -12, 0" />
 
-        <Grid Grid.Row="1"
+        <control:ImageToggleButton 
+            Grid.Row="1"
+            Margin="12, 6, 0, 6"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            UncheckedImage="{mp:ImageResource StackdriverErrorReporting/Resources/play_icon.png}"
+            CheckedImage="{mp:ImageResource StackdriverErrorReporting/Resources/pause_icon.png}" 
+            Padding="6" 
+            Foreground="#FF3B78E7"
+            FontWeight="DemiBold" 
+            MouseOverForeground="BlueViolet"
+            Style="{StaticResource checkedToggle}" 
+            Content="AUTO RELOAD"/>
+
+        <Line 
+            Grid.Row="2"
+            HorizontalAlignment="Stretch"
+            X2="{Binding ActualWidth, RelativeSource={RelativeSource Self}}" 
+            Stroke="LightGray" 
+            SnapsToDevicePixels="True"
+            StrokeThickness="1"/>
+
+        <Grid Grid.Row="3"
               Margin="0, 12, 0, 12" 
               IsEnabled="{Binding IsLoadingComplete}"
               >
@@ -104,7 +138,7 @@
             <local:TimeRangeButtons Grid.Column="1" DataContext="{Binding TimeRangeButtonsModel}" />
         </Grid>
 
-        <DataGrid Grid.Row="2"
+        <DataGrid Grid.Row="4"
                   Panel.ZIndex="5"
                   x:Name="dataGridEventGroup"
                   IsReadOnly="True" 
@@ -116,6 +150,7 @@
                   CellStyle="{StaticResource cellStyle}"
                   RowStyle="{StaticResource rowStyle}" 
                   IsEnabled="{Binding IsLoadingComplete}"
+                  Visibility="{Binding ShowException, Converter={utils:VisibilityConverter IsNegated=True}}" 
                   >
             <DataGrid.Resources>
                 <!--DataTemplate for Published Date column defined in Grid.Resources.  PublishDate is a property on the ItemsSource of type DateTime -->
@@ -171,7 +206,7 @@
 
             </DataGrid.Columns>
         </DataGrid>
-
+        
         <control:ProgressIndicator 
             Grid.Row="2"
             Panel.ZIndex="10"
@@ -181,5 +216,19 @@
             FullDuration="1000"
             Visibility="{Binding IsLoadingComplete, Converter={utils:VisibilityConverter IsNegated=True}}" >
         </control:ProgressIndicator>
+
+        <TextBox 
+            Grid.Row="2"
+            Panel.ZIndex="15"
+            Padding="8, 5, 8, 5" 
+            VerticalAlignment="Top"
+            HorizontalAlignment="Stretch"
+            TextAlignment="Left" 
+            TextWrapping="Wrap"
+            Foreground="Red" 
+            Text="{Binding ExceptionString, Mode=OneWay}" 
+            Visibility="{Binding ShowException, Converter={utils:VisibilityConverter}}" 
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
+            IsReadOnly="True" />
     </Grid>
 </UserControl>

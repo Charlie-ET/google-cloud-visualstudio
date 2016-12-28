@@ -145,6 +145,9 @@
     <Compile Include="CloudExplorer\TreeLeafLink.cs" />
     <Compile Include="CloudExplorer\TreeNode.cs" />
     <Compile Include="Controls\IconButton.cs" />
+    <Compile Include="Controls\ImageToggleButton.xaml.cs">
+      <DependentUpon>ImageToggleButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\LabelWithHelp.cs" />
     <Compile Include="Controls\PasswordBoxWithReveal.cs" />
     <Compile Include="Controls\PressButton.cs" />
@@ -229,6 +232,9 @@
     <Compile Include="SplitTrafficManagement\SplitTrafficWindowContent.xaml.cs">
       <DependentUpon>SplitTrafficWindowContent.xaml</DependentUpon>
     </Compile>
+    <Compile Include="StackdriverErrorReporting\AutoReloadButton.xaml.cs">
+      <DependentUpon>AutoReloadButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="StackdriverErrorReporting\DetailWindow.xaml.cs">
       <DependentUpon>DetailWindow.xaml</DependentUpon>
     </Compile>
@@ -258,6 +264,9 @@
     </Compile>
     <Compile Include="StackdriverErrorReporting\TimeRangeButtonsViewModel.cs" />
     <Compile Include="StackdriverErrorReporting\TimeRangeItem.cs" />
+    <Compile Include="StackdriverErrorReporting\Window1.xaml.cs">
+      <DependentUpon>Window1.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TerminalServer\TerminalServerManager.cs" />
     <Compile Include="SolutionUtils\ISolutionProject.cs" />
     <Compile Include="SolutionUtils\SolutionHelper.cs" />
@@ -320,6 +329,8 @@
   <ItemGroup>
     <Content Include="StackdriverErrorReporting\Resources\ErrorReportingDetailToolWindowCommand.png" />
     <Content Include="StackdriverErrorReporting\Resources\ErrorReportingToolWindowCommand.png" />
+    <Resource Include="StackdriverErrorReporting\Resources\pause_icon.png" />
+    <Resource Include="StackdriverErrorReporting\Resources\play_icon.png" />
     <Resource Include="Theming\Resources\logo_cloud.png" />
     <Resource Include="Theming\Resources\ic_help_black_14px.png" />
     <Resource Include="PublishDialogSteps\ChoiceStep\Resources\AppEngine_128px_Retina.png" />
@@ -616,6 +627,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\ImageToggleButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ProgressIndicator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -668,6 +683,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="StackdriverErrorReporting\AutoReloadButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="StackdriverErrorReporting\ErrorReportingDetailToolWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -691,6 +710,10 @@
     <Page Include="StackdriverErrorReporting\TimeRangeButtons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StackdriverErrorReporting\Window1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="WindowsCredentialsChooser\WindowsCredentialsChooserWindowContent.xaml">
       <SubType>Designer</SubType>

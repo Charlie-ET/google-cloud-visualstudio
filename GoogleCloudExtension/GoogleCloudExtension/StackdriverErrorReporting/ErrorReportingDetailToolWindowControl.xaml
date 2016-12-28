@@ -12,125 +12,148 @@
              d:DesignHeight="600" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True,Type=local:ErrorReportingDetailViewModel}" >
 
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Theming/CommonResources.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+<UserControl.Resources>
+    <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="../Theming/CommonResources.xaml" />
+        </ResourceDictionary.MergedDictionaries>
 
-            <utils:VisibilityConverter x:Key="visibilityConverter" />
+        <utils:VisibilityConverter x:Key="visibilityConverter" />
 
-                <Style x:Key="cellStyle" TargetType="DataGridCell">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="DataGridCell">
-                            <Border  BorderThickness="0">
-                                <Border x:Name="border" Padding="0, 4, 0, 4" >
-                                    <ContentPresenter />
-                                </Border>
+            <Style x:Key="cellStyle" TargetType="DataGridCell">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Border  BorderThickness="0">
+                            <Border x:Name="border" Padding="0, 4, 0, 4" >
+                                <ContentPresenter />
                             </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-            <Style x:Key="rowStyle" TargetType="DataGridRow">
-                <Setter Property="TextBlock.TextWrapping" Value="NoWrap" />
-                <Setter Property="TextBlock.FontSize" Value="12" />
-                <Setter Property="Margin" Value="0, 0, 0, 1"/>
-                <Setter Property="BorderThickness" Value="0, 0, 0, 1"/>
-                <Setter Property="BorderBrush" Value="LightGray" />
-                <Setter Property="Background" Value="#FFFDFDFD" />
-                <Style.Triggers>
-                    <Trigger Property="AlternationIndex" Value="1">
-                        <Setter Property="Background" Value="#F5F5F5"/>
-                    </Trigger>
-                    <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="#FFFFD6" />
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
+        <Style x:Key="rowStyle" TargetType="DataGridRow">
+            <Setter Property="TextBlock.TextWrapping" Value="NoWrap" />
+            <Setter Property="TextBlock.FontSize" Value="12" />
+            <Setter Property="Margin" Value="0, 0, 0, 1"/>
+            <Setter Property="BorderThickness" Value="0, 0, 0, 1"/>
+            <Setter Property="BorderBrush" Value="LightGray" />
+            <Setter Property="Background" Value="#FFFDFDFD" />
+            <Style.Triggers>
+                <Trigger Property="AlternationIndex" Value="1">
+                    <Setter Property="Background" Value="#F5F5F5"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FFFFD6" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
-            <Style x:Key="BorderCommonStyle" TargetType="Border" >
-                <Setter Property="BorderBrush" Value="LightGray" />
-                <Setter Property="BorderThickness" Value="1" />
-                <Setter Property="Margin" Value="0, 6, 0, 6" />
-            </Style>
+        <Style x:Key="BorderCommonStyle" TargetType="Border" >
+            <Setter Property="BorderBrush" Value="LightGray" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Margin" Value="0, 6, 0, 6" />
+        </Style>
 
-            <Style x:Key="TreeViewItemToggleButton_Style" TargetType="{x:Type ToggleButton}">
-                <Setter Property="Focusable" Value="False"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ToggleButton}">
-                            <StackPanel Orientation="Horizontal">
-                            <Grid Background="Transparent" Height="13" Margin="0,1,0,0" Width="15">
-                                <Path x:Name="Collapsed" Data="M 0,9 C0,9 5,4.5 5,4.5 5,4.5 0,0 0,0 0,0 0,9 0,9 z" HorizontalAlignment="Left" Height="9" Margin="2,1,1,1" Opacity="0.4" Stretch="Fill" SnapsToDevicePixels="True" Stroke="{TemplateBinding Foreground}" StrokeThickness="1" VerticalAlignment="Center" Width="5"/>
-                                <Path x:Name="Expanded" Data="M 0,6 C0,6 6,6 6,6 6,6 6,0 6,0 6,0 0,6 0,6 z" Fill="#FFA3A3A3" HorizontalAlignment="Left" Height="6" Margin="1,2,1,1" Stretch="Fill" SnapsToDevicePixels="True" Stroke="{TemplateBinding Foreground}" StrokeThickness="1" Visibility="Hidden" VerticalAlignment="Center" Width="6"/>
-                            </Grid>
-                                <ContentPresenter/>
-                                <StackPanel.ToolTip>
-                                    <ToolTip x:Name="ToolTip" Content="Show stack." Style="{StaticResource CommonTooltipStyle}" />
-                                </StackPanel.ToolTip>
-                            </StackPanel>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsChecked" Value="True">
-                                    <Setter Property="Visibility" TargetName="Collapsed" Value="Hidden"/>
-                                    <Setter Property="Visibility" TargetName="Expanded" Value="Visible"/>
-                                    <Setter Property="Content" TargetName="ToolTip" Value="HideF stack." />
-                                </Trigger>
-                                <Trigger Property="IsMouseOver" Value="True" >
-                                    <Setter Property="Foreground" Value="Blue" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
+        <Style x:Key="TreeViewItemToggleButton_Style" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <StackPanel Orientation="Horizontal">
+                        <Grid Background="Transparent" Height="13" Margin="0,1,0,0" Width="15">
+                            <Path x:Name="Collapsed" Data="M 0,9 C0,9 5,4.5 5,4.5 5,4.5 0,0 0,0 0,0 0,9 0,9 z" HorizontalAlignment="Left" Height="9" Margin="2,1,1,1" Opacity="0.4" Stretch="Fill" SnapsToDevicePixels="True" Stroke="{TemplateBinding Foreground}" StrokeThickness="1" VerticalAlignment="Center" Width="5"/>
+                            <Path x:Name="Expanded" Data="M 0,6 C0,6 6,6 6,6 6,6 6,0 6,0 6,0 0,6 0,6 z" Fill="#FFA3A3A3" HorizontalAlignment="Left" Height="6" Margin="1,2,1,1" Stretch="Fill" SnapsToDevicePixels="True" Stroke="{TemplateBinding Foreground}" StrokeThickness="1" Visibility="Hidden" VerticalAlignment="Center" Width="6"/>
+                        </Grid>
+                            <ContentPresenter/>
+                            <StackPanel.ToolTip>
+                                <ToolTip x:Name="ToolTip" Content="Show stack." Style="{StaticResource CommonTooltipStyle}" />
+                            </StackPanel.ToolTip>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Visibility" TargetName="Collapsed" Value="Hidden"/>
+                                <Setter Property="Visibility" TargetName="Expanded" Value="Visible"/>
+                                <Setter Property="Content" TargetName="ToolTip" Value="HideF stack." />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True" >
+                                <Setter Property="Foreground" Value="Blue" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
             
-        </ResourceDictionary>
-    </UserControl.Resources>
+    </ResourceDictionary>
+</UserControl.Resources>
 
     <Grid Margin="12, 0, 12, 12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <control:TitleBar Grid.Row="0" Margin="-12, 0, -12, 0" />
+    
+        <control:TitleBar 
+            Grid.Row="0" 
+            Margin="-12, 0, -12, 0" />
 
+        <!-- buttons -->
+        <Grid 
+            Grid.Row="1"
+            Margin="0, 12, 0, 12" 
+            IsEnabled="{Binding IsControlEnabled}" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
+            <TextBlock 
+                Grid.Column="0"                
+                Margin="0, 0, 36, 0"
+                FontWeight="DemiBold"
+                Text="{Binding Message}"
+                Style="{StaticResource CommonTextStyle}" />
 
-        <ScrollViewer Grid.Row="1"
-                HorizontalScrollBarVisibility="Disabled"    
-                      VerticalScrollBarVisibility="Auto"
-                      >
+            <local:TimeRangeButtons 
+                Grid.Column="1" 
+                DataContext="{Binding TimeRangeButtonsModel}" />
+        </Grid>
 
-            <StackPanel
-                IsEnabled="{Binding IsControlEnabled}"
-                >
-                <Grid 
-                  Margin="0, 12, 0, 12" >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock 
-                    Grid.Column="0"                
-                    Margin="0, 0, 36, 0"
-                    FontWeight="DemiBold"
-                    Text="{Binding Message}"
-                    Style="{StaticResource CommonTextStyle}"/>
-                    <local:TimeRangeButtons 
-                    Grid.Column="1" 
-                    DataContext="{Binding TimeRangeButtonsModel}" 
-                    
-                />
-                </Grid>
-                
-                <Border Style="{StaticResource BorderCommonStyle}"
-                    DataContext="{Binding GroupItem}">
-                        <UniformGrid Rows="1" Columns="4" 
-                         Margin="12"
-                         >
+        <ScrollViewer 
+            Grid.Row="2" 
+            HorizontalScrollBarVisibility="Disabled"    
+            VerticalScrollBarVisibility="Auto" >
+
+            <Grid>
+
+                <!-- Exception Box. -->
+                <TextBox 
+                    Grid.Row="2"
+                    Panel.ZIndex="15"
+                    Padding="8, 5, 8, 5" 
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Stretch"
+                    TextAlignment="Left" 
+                    TextWrapping="Wrap"
+                    Foreground="Red" 
+                    Text="{Binding ExceptionString, Mode=OneWay}" 
+                    Visibility="{Binding ShowException, Converter={utils:VisibilityConverter}}" 
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    IsReadOnly="True" />
+
+                <StackPanel Visibility="{Binding ShowException, Converter={utils:VisibilityConverter IsNegated=True}}" >
+
+                    <!-- summary  -->
+                    <Border 
+                        Style="{StaticResource BorderCommonStyle}"
+                        DataContext="{Binding GroupItem}">
+                        <UniformGrid 
+                            Rows="1" Columns="4" 
+                            Margin="12">
                             <Border >
                                 <StackPanel >
                                     <TextBlock Text="Occurances" />
@@ -138,27 +161,24 @@
                                 </StackPanel>
                             </Border>
                             <Border BorderThickness="1, 0, 0, 0"
-                            BorderBrush="LightGray"
-                            Padding="6, 0, 0, 0"
-                        >
+                        BorderBrush="LightGray"
+                        Padding="6, 0, 0, 0">
                                 <StackPanel>
                                     <TextBlock Text="Seen in" />
                                     <TextBlock Text="{Binding SeenIn}" />
                                 </StackPanel>
                             </Border>
                             <Border BorderThickness="1, 0, 0, 0"
-                            BorderBrush="LightGray"
-                            Padding="6, 0, 0, 0"
-                        >
+                        BorderBrush="LightGray"
+                        Padding="6, 0, 0, 0">
                                 <StackPanel>
                                     <TextBlock Text="First seen" />
                                     <TextBlock Text="{Binding First Seen}" />
                                 </StackPanel>
                             </Border>
                             <Border BorderThickness="1, 0, 0, 0"
-                            BorderBrush="LightGray"
-                            Padding="6, 0, 0, 0"
-                        >
+                        BorderBrush="LightGray"
+                        Padding="6, 0, 0, 0" >
                                 <StackPanel>
                                     <TextBlock Text="Last seen" />
                                     <TextBlock Text="{Binding LastSeen}" />
@@ -167,83 +187,97 @@
                         </UniformGrid>
                     </Border>
 
-                <Border Style="{StaticResource BorderCommonStyle}">
-                    <Grid>
-                        <control:ProgressIndicator 
-                Panel.ZIndex="20"
-            HorizontalAlignment="Center"                       
-            VerticalAlignment="Top" 
-            FullDuration="1000" 
-                Visibility="{Binding IsGroupLoading, Converter={utils:VisibilityConverter}}" />
-                        <local:TimedCountBarChart 
-                             Panel.ZIndex="10"
-                        DataContext="{Binding BarChartModel}" 
-                                              />
-                    </Grid>
-                </Border>
+                    <!-- chart and progress indicator. -->
+                    <Border Style="{StaticResource BorderCommonStyle}">
 
+                        <Grid>
+
+                            <control:ProgressIndicator 
+                                Panel.ZIndex="20"
+                                HorizontalAlignment="Center"                       
+                                VerticalAlignment="Top" 
+                                FullDuration="1000" 
+                                Visibility="{Binding IsGroupLoading, Converter={utils:VisibilityConverter}}" />
+
+                            <local:TimedCountBarChart 
+                                Panel.ZIndex="10"
+                                DataContext="{Binding BarChartModel}" />
+                        </Grid>
+
+                    </Border>
+
+                    <!-- stack trace sample -->
                     <Border Style="{StaticResource BorderCommonStyle}" >
                         <StackPanel Margin="6">
+
                             <ToggleButton  
-                            Style="{StaticResource TreeViewItemToggleButton_Style}"                        
-                    x:Name="traceSampleToggle"
-                            HorizontalAlignment="Left"
-                    IsChecked="True" 
-                            Padding="2, 0, 2, 0">Stack trace sample</ToggleButton>
+                                Style="{StaticResource TreeViewItemToggleButton_Style}"                        
+                                x:Name="traceSampleToggle"
+                                HorizontalAlignment="Left"
+                                IsChecked="True" 
+                                Padding="2, 0, 2, 0">
+                                Stack trace sample
+                            </ToggleButton>
+
                             <TextBlock Text="{Binding Stack}" 
-                               Visibility="{Binding IsChecked, ElementName=traceSampleToggle, 
-                        Converter={StaticResource visibilityConverter}}" />
+                                Visibility="{Binding IsChecked, ElementName=traceSampleToggle, 
+                                Converter={StaticResource visibilityConverter}}" />
 
                         </StackPanel>
                     </Border>
 
+                    <!-- Recent samples. -->
                     <StackPanel Margin="0, 12, 0, 6">
-                        <TextBlock Text="Recent Samples" Style="{StaticResource CommonTextStyle}" Padding="0, 6, 0, 6"/>
-                    </StackPanel>
-                <Grid>
-                    <control:ProgressIndicator 
-                Panel.ZIndex="20"
-                        Margin="0, 20"
-            HorizontalAlignment="Center"                       
-            VerticalAlignment="Top" 
-            FullDuration="1000" 
-                Visibility="{Binding IsEventLoading, Converter={StaticResource visibilityConverter}}" />
 
-                    <DataGrid 
-                        Panel.ZIndex="10"
-                        x:Name="DataGridEvents" 
+                        <TextBlock Text="Recent Samples" Style="{StaticResource CommonTextStyle}" Padding="0, 6, 0, 6"/>
+
+                        <Grid>
+                            <control:ProgressIndicator 
+                                Panel.ZIndex="20"
+                                Margin="0, 20"
+                                HorizontalAlignment="Center"                       
+                                VerticalAlignment="Top" 
+                                FullDuration="1000" 
+                                Visibility="{Binding IsEventLoading, Converter={StaticResource visibilityConverter}}" />
+
+                            <DataGrid 
+                                Panel.ZIndex="10"
+                                x:Name="DataGridEvents" 
                               
-                      ItemsSource="{Binding EventItemCollection}"
-                      AutoGenerateColumns="False" 
-                      IsReadOnly="True" 
-                      HeadersVisibility="Column"    
-                      ColumnHeaderHeight="10"                   
-                      AlternationCount="2" 
-                      GridLinesVisibility="None" 
-                      CellStyle="{StaticResource cellStyle}"
-                      RowStyle="{StaticResource rowStyle}"
-                      BorderThickness="0"
-                      PreviewMouseDown="dataGrid_PreviewMouseDown"
-                      >
-                        <DataGrid.Resources>
-                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" 
-                                         Color="Black"/>
-                        </DataGrid.Resources>
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding EventTime}" />
-                            <DataGridTextColumn Binding="{Binding SummaryMessage}" />
-                        </DataGrid.Columns>
-                        <DataGrid.RowDetailsTemplate>
-                            <DataTemplate>
-                                <!-- Use a border to set the background. -->
-                                <Border Background="White" Padding="12, 0, 0 , 2">
-                                    <TextBlock Text="{Binding Message}" />
-                                </Border>
-                            </DataTemplate>
-                        </DataGrid.RowDetailsTemplate>
-                    </DataGrid>
-                </Grid>
-            </StackPanel>
+                                ItemsSource="{Binding EventItemCollection}"
+                                AutoGenerateColumns="False" 
+                                IsReadOnly="True" 
+                                HeadersVisibility="Column"    
+                                ColumnHeaderHeight="10"                   
+                                AlternationCount="2" 
+                                GridLinesVisibility="None" 
+                                CellStyle="{StaticResource cellStyle}"
+                                RowStyle="{StaticResource rowStyle}"
+                                BorderThickness="0"
+                                PreviewMouseDown="dataGrid_PreviewMouseDown"
+                                >
+                                <DataGrid.Resources>
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" 
+                                                    Color="Black"/>
+                                </DataGrid.Resources>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Binding="{Binding EventTime}" />
+                                    <DataGridTextColumn Binding="{Binding SummaryMessage}" />
+                                </DataGrid.Columns>
+                                <DataGrid.RowDetailsTemplate>
+                                    <DataTemplate>
+                                        <!-- Use a border to set the background. -->
+                                        <Border Background="White" Padding="12, 0, 0 , 2">
+                                            <TextBlock Text="{Binding Message}" />
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGrid.RowDetailsTemplate>
+                            </DataGrid>
+                        </Grid>
+                    </StackPanel>
+
+                </StackPanel>
+            </Grid>
         </ScrollViewer>
     </Grid>
 </UserControl>

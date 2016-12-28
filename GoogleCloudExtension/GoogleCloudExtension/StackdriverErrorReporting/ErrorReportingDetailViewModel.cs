@@ -14,6 +14,7 @@
 
 using Google.Apis.Clouderrorreporting.v1beta1.Data;
 using GoogleCloudExtension.Accounts;
+using GoogleCloudExtension.DataSources;
 using GoogleCloudExtension.DataSources.ErrorReporting;
 using GoogleCloudExtension.Utils;
 using System;
@@ -45,26 +46,41 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 
     public class ErrorReportingDetailViewModel : ViewModelBase
     {
-        private bool isGroupLoading;
-        private bool isEventLoading;
-        private bool isControlEnabled = true;
+        private bool _isGroupLoading;
+        private bool _isEventLoading;
+        private bool _isControlEnabled = true;
+
+        private bool _showException;
+        private string _exceptionString;
+
+        public string ExceptionString
+        {
+            get { return _exceptionString; }
+            set { SetValueAndRaise(ref _exceptionString, value); }
+        }
+
+        public bool ShowException
+        {
+            get { return _showException; }
+            set { SetValueAndRaise(ref _showException, value); }
+        }
 
         public bool IsControlEnabled
         {
-            get { return isControlEnabled; }
-            set { SetValueAndRaise(ref isControlEnabled, value); }
+            get { return _isControlEnabled; }
+            set { SetValueAndRaise(ref _isControlEnabled, value); }
         }
 
         public bool IsGroupLoading
         {
-            get { return isGroupLoading; }
-            set { SetValueAndRaise(ref isGroupLoading, value); }
+            get { return _isGroupLoading; }
+            set { SetValueAndRaise(ref _isGroupLoading, value); }
         }
 
         public bool IsEventLoading
         {
-            get { return isEventLoading; }
-            set { SetValueAndRaise(ref isEventLoading, value); }
+            get { return _isEventLoading; }
+            set { SetValueAndRaise(ref _isEventLoading, value); }
         }
 
         public TimeRangeButtonsViewModel TimeRangeButtonsModel { get; }
@@ -121,6 +137,7 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         private async Task UpdateEventGroupAsync()
         {
             IsGroupLoading = true;
+            ShowException = false;
             try
             {
                 var groups = await SerDataSourceInstance.Instance.Value.ListGroupStatusAsync(
@@ -136,6 +153,11 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
                     GroupItem.ErrorGroup.TimedCounts = null;
                 }
             }
+            catch (DataSourceException ex)
+            {
+                ExceptionString = ex.ToString();
+                ShowException = true;
+            }
             finally
             {
                 IsGroupLoading = false;
@@ -148,14 +170,21 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         {
             EventItemCollection = null;
             RaisePropertyChanged(nameof(EventItemCollection));
-            if (GroupItem != null)
+
+            if (GroupItem.ErrorGroup.TimedCounts != null)
             {
                 IsEventLoading = true;
                 IsControlEnabled = false;
+                ShowException = false;
                 try
                 {
                     var events = await SerDataSourceInstance.Instance.Value.ListEventsAsync(GroupItem.ErrorGroup, TimeRangeButtonsModel.SelectedTimeRangeItem.EventTimeRange);
                     EventItemCollection = CollectionViewSource.GetDefaultView(events.ErrorEvents?.Select(x => new EventItem(x))) as CollectionView;
+                }
+                catch (DataSourceException ex)
+                {
+                    ExceptionString = ex.ToString();
+                    ShowException = true;
                 }
                 finally
                 {
