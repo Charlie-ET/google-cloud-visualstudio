@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Google.Apis.Clouderrorreporting.v1beta1.Data;
+using EventGroupTimeRangeEnum = Google.Apis.Clouderrorreporting.v1beta1.ProjectsResource.GroupStatsResource.ListRequest.TimeRangePeriodEnum;
 using GoogleCloudExtension.Accounts;
 using GoogleCloudExtension.DataSources.ErrorReporting;
 using GoogleCloudExtension.Utils;
@@ -52,9 +53,9 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 
         private long Count => _timedCount.Count.GetValueOrDefault();
 
-        public bool ShowYScale { get; }
+        public bool ShowTimeline => TimeLine != null;
 
-        public string YScale { get; }
+        public string TimeLine { get; }
 
         public string ToolTipMessage => $"{Count} times in {"1 day"} {Environment.NewLine} Starting from {_timedCount.StartTime}.";
 
@@ -62,11 +63,10 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 
         public double BarHeightRatio { get; }
 
-        public TimedCountItem(TimedCount timedCount, bool isYScaleVisible, double heightMultiplier, double countScaleMultiplier)
+        public TimedCountItem(TimedCount timedCount, string timeLine, double heightMultiplier, double countScaleMultiplier)
         {
             _timedCount = timedCount;
-            ShowYScale = isYScaleVisible;
-            YScale = isYScaleVisible ? ((DateTime)(timedCount.StartTime)).ToString("MMM-dd") : null;
+            TimeLine = timeLine;
             BarHeight = (int)(Count * heightMultiplier);
             BarHeightRatio = Count * countScaleMultiplier;
         }
@@ -74,15 +74,17 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 
     public class XLine : Model
     {
-        public string XScale { get; }
+        public string CountScale { get; }
 
         public int RowHeight => TimedCountBarChartViewModel.RowHeight;
 
-        public XLine(double xScale)
+        public XLine(double scale)
         {
-            XScale = String.Format(((Math.Round(xScale) == xScale) ? "{0:0}" : "{0:0.00}"), xScale);
+            CountScale = scale == 0 ? null :
+                String.Format(((Math.Round(scale) == scale) ? "{0:0}" : "{0:0.00}"), scale);
         }
     }
+
 
     public class TimedCountBarChartViewModel : ViewModelBase
     {
@@ -92,54 +94,98 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         private double heightMultiplier;
         private double countScaleMultiplier;
 
+        private bool _isEmpty = true;
+        public bool IsEmpty
+        {
+            get { return _isEmpty; }
+            set { SetValueAndRaise(ref _isEmpty, value); }
+        }
+
         public IList<TimedCountItem> TimedCountCollection { get; }
 
         public IList<XLine> XLines { get; }
 
-        public TimedCountBarChartViewModel(IList<TimedCount> timedCounts)
+        public TimedCountBarChartViewModel(IList<TimedCount> timedCounts, EventGroupTimeRangeEnum timeRangeEnum)
         {
-            // TODO : test if timedCounts == null;
+            long maxCount = timedCounts == null ? 0 : MaxCountScale(timedCounts.Max(x => x.Count.GetValueOrDefault()));
+
+            XLines = new List<XLine>();
+            double countScaleUnit = (double)maxCount / RowNumber;
+            for (int i = RowNumber; i > 0; --i)
+            {
+                XLines.Add(new XLine(countScaleUnit * i));
+            }
+
             if (timedCounts == null)
             {
                 return;
             }
 
-            long maxCount = timedCounts.Max(x => x.Count.GetValueOrDefault());
-            heightMultiplier = maxCount == 0 ? 0 : BarMaxHeight / maxCount;
-            countScaleMultiplier = maxCount == 0 ? 0 : 1.00 / maxCount;
+            IsEmpty = false;
+
+            heightMultiplier = BarMaxHeight / maxCount;
+            countScaleMultiplier = 1.00 / maxCount;
+
+
+            string timeLineFormat;
+            switch (timeRangeEnum)
+            {
+                case EventGroupTimeRangeEnum.PERIOD1WEEK:
+                case EventGroupTimeRangeEnum.PERIOD30DAYS:
+                    timeLineFormat = "MMM d";
+                    break;
+                case EventGroupTimeRangeEnum.PERIOD1DAY:
+                case EventGroupTimeRangeEnum.PERIOD1HOUR:
+                case EventGroupTimeRangeEnum.PERIOD6HOURS:
+                    timeLineFormat = "hh:mm tt";
+                    break;
+                default:
+                    timeLineFormat = "MMM d HH:mm";
+                    break;
+            }
 
             TimedCountCollection = new List<TimedCountItem>();
             int k = 0;
-            Debug.Assert(timedCounts.Count > 5);
+            Debug.Assert(timedCounts.Count > 25);
             foreach (var counter in timedCounts)
             {
                 bool isVisible = (k == 0 || k == timedCounts.Count - 3 || k == timedCounts.Count / 3 || k == timedCounts.Count * 2 / 3);
-                maxCount = Math.Max(counter.Count.GetValueOrDefault(), maxCount);
-                TimedCountCollection.Add(new TimedCountItem(counter, isVisible, heightMultiplier, countScaleMultiplier));
+
+                DateTime startTime = (DateTime)counter.StartTime;
+                string timeLine = isVisible ? startTime.ToString(timeLineFormat) : null;
+
+                TimedCountCollection.Add(new TimedCountItem(counter, timeLine, heightMultiplier, countScaleMultiplier));
                 ++k;
             }
 
-            XLines = new List<XLine>();
-            double xScaleUnit = (double)maxCount / RowNumber;
-            for (int i = RowNumber; i > 0; --i)
-            {
-                XLines.Add(new XLine(xScaleUnit * i));
-            }
+
         }
 
-        public TimedCountBarChartViewModel(): this(GenerateFakeRanges())
+        public TimedCountBarChartViewModel(): this(GenerateFakeRanges(), EventGroupTimeRangeEnum.PERIOD6HOURS)
         {
+        }
+
+        private long MaxCountScale(long maxCount)
+        {
+            if (maxCount <= 0)
+            {
+                return 1;
+            }
+
+            return (long)(Math.Ceiling((double)maxCount/RowNumber)) * RowNumber;
         }
 
         private static IList<TimedCount> GenerateFakeRanges()
         {
             List<TimedCount> tCounts = new List<TimedCount>();
-            for (int i = 10; i > 0; --i)
+            for (int i = 30; i > 0; --i)
             {
                 TimedCount t = new TimedCount();
                 t.StartTime = DateTime.UtcNow.AddDays(-1 * i);
                 t.EndTime = DateTime.UtcNow.AddDays(-1 * i + 1);
-                t.Count = (i%3)*i;
+                t.Count = i == 5 ? 45 : (i%3)*i;
+                if (i == 2) { t.Count = 15; }
+                if (i == 7) { t.Count = 30; }
                 tCounts.Add(t);
             }
 

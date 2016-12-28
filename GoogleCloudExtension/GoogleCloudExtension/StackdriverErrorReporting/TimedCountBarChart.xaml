@@ -19,10 +19,17 @@
             <utils:VisibilityConverter x:Key="visibilityConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
-    <StackPanel>
-        <StackPanel x:Name="ChartTitle" Margin="12, 6, 0, 12">
-            <TextBlock Text="Errors" />
-        </StackPanel>
+    <Grid>
+        <TextBlock 
+            Panel.ZIndex="100"
+            Text="There is no data to show." 
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Visibility="{Binding IsEmpty, Converter={StaticResource visibilityConverter}}" />
+        <StackPanel Visibility="{Binding IsEmpty, Converter={utils:VisibilityConverter IsNegated=True}}" >
+
+            <TextBlock Text="Errors" Margin="12, 6, 0, 0" Height="30" VerticalAlignment="Center" />
+            
         <Grid Margin="12, 0, 24, 0">
             <ItemsControl Panel.ZIndex="10" 
                           ItemsSource="{Binding XLines}"
@@ -35,8 +42,11 @@
                 <!-- Margin bottom 25 = 5 + 20  <RowDefinition Height="5" />  <RowDefinition Height="20" /> -->
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border BorderThickness="0, 1, 0, 0" BorderBrush="Gray" >
-                            <TextBlock Text="{Binding XScale}" 
+                        
+                        <!-- x axis lines -->
+                        <Border BorderThickness="0, 1, 0, 0" BorderBrush="Gray" 
+                                Height="{Binding RowHeight}">
+                                <TextBlock Text="{Binding CountScale}" 
                                        Margin="20, 0, 0, 0" 
                                        HorizontalAlignment="Left" 
                                        MaxWidth="30"/>
@@ -45,7 +55,7 @@
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Columns="1" IsItemsHost="True" />
+                        <StackPanel IsItemsHost="True" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>                
             </ItemsControl>
@@ -54,7 +64,7 @@
                           Background="Transparent"
                           Margin="50, 0, 0, 0"
                 ItemsSource="{Binding TimedCountCollection}" 
-                VerticalAlignment="Center">
+                VerticalAlignment="Bottom">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -80,11 +90,12 @@
                                 Y2="3"
                                 Stroke="Gray"
                                 StrokeThickness="1"
-                                Visibility="{Binding ShowYScale, Converter={StaticResource visibilityConverter}}" />
+                                Visibility="{Binding ShowTimeline, Converter={StaticResource visibilityConverter}}" />
                             
                             <TextBlock Grid.Row="2"                                        
-                                       Margin="0, 0, -30, 0"
-                                       Text="{Binding YScale}" />
+                                       Margin="0, 0, -50, 0"
+                                       Text="{Binding TimeLine}" 
+                                       Visibility="{Binding ShowTimeline, Converter={StaticResource visibilityConverter}}" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -96,4 +107,5 @@
             </ItemsControl>
         </Grid>
     </StackPanel>
+    </Grid>
 </UserControl>

@@ -53,7 +53,7 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             Message = lines?[0];
             Stack = lines?[1];
             NavigateDetailCommand = new ProtectedCommand(NavigateDetail);
-            BarChartModel = new TimedCountBarChartViewModel(errorGroup.TimedCounts);
+            BarChartModel = new TimedCountBarChartViewModel(errorGroup.TimedCounts, groupTimeRange);
         }
         
         private void NavigateDetail()

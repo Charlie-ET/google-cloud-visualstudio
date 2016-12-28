@@ -193,7 +193,8 @@
                     </Border>
 
                     <!-- chart and progress indicator. -->
-                    <Border Style="{StaticResource BorderCommonStyle}">
+                    <Border Style="{StaticResource BorderCommonStyle}" 
+                            MinHeight="180">
 
                         <Grid>
 
@@ -202,6 +203,7 @@
                                 HorizontalAlignment="Center"                       
                                 VerticalAlignment="Top" 
                                 FullDuration="1000" 
+                                Margin="6"
                                 Visibility="{Binding IsGroupLoading, Converter={utils:VisibilityConverter}}" />
 
                             <local:TimedCountBarChart 
