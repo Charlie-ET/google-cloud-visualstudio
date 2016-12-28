@@ -25,6 +25,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Linq;
+using System.Windows.Threading;
 
 namespace GoogleCloudExtension.StackdriverErrorReporting
 {
@@ -86,7 +87,7 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             RaisePropertyChanged(nameof(CurrentTimeRangeCaption));
         }
 
-        private async Task GetGroupStats()
+        public async Task GetGroupStats()
         {
             IsLoadingComplete = false;
             _groupStatsCollection.Clear();

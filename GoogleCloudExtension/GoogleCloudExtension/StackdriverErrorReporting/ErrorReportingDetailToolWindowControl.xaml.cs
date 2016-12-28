@@ -26,7 +26,17 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         public ErrorReportingDetailToolWindowControl()
         {
             this.InitializeComponent();
+            ViewModel = new ErrorReportingDetailViewModel();
         }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            DataContext = ViewModel;
+            autoReloadToggleButton.AutoReload += (sender, e) => ViewModel.UpdateGroupAndEventAsync();
+        }
+
+        public ErrorReportingDetailViewModel ViewModel { get; }
 
         /// <summary>
         /// Get the first ancestor control element of type TControl.

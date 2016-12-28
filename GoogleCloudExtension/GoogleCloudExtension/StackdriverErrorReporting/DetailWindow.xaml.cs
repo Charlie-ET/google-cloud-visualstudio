@@ -37,13 +37,11 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
                 return _instance;
             }
         }
-        public ErrorReportingDetailViewModel ViewModel { get; }
+        public ErrorReportingDetailViewModel ViewModel { get { return detailControl.ViewModel; } }
 
         public DetailWindow()
         {
             InitializeComponent();
-            ViewModel = new ErrorReportingDetailViewModel();
-            detailControl.DataContext = ViewModel;
         }
     }
 }

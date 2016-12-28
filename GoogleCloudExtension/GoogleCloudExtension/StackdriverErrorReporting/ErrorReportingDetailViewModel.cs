@@ -136,6 +136,12 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 
         private async Task UpdateEventGroupAsync()
         {
+            if (GroupItem == null)
+            {
+                Debug.Assert(false, "UpdateEventGroupAsync, GroupItem is null");
+                return;
+            }
+
             IsGroupLoading = true;
             ShowException = false;
             try
@@ -196,7 +202,7 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             RaisePropertyChanged(nameof(EventItemCollection));
         }
 
-        private async void UpdateGroupAndEventAsync()
+        public async void UpdateGroupAndEventAsync()
         {
             IsControlEnabled = false;
             try

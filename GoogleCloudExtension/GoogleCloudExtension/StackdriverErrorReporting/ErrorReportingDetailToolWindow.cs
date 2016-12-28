@@ -24,7 +24,13 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
     [Guid("f62a2c47-c030-456d-8a45-8e882fcb0ee3")]
     public class ErrorReportingDetailToolWindow : ToolWindowPane
     {
-        public ErrorReportingDetailViewModel ViewModel { get; }
+        public ErrorReportingDetailViewModel ViewModel
+        {
+            get
+            {
+                return (Content as ErrorReportingDetailToolWindowControl)?.ViewModel;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ErrorReportingDetailToolWindow"/> class.
@@ -37,14 +43,6 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
             this.Content = new ErrorReportingDetailToolWindowControl();
-            ViewModel = new ErrorReportingDetailViewModel();
-        }
-
-        public override void OnToolWindowCreated()
-        {
-            base.OnToolWindowCreated();
-            var control = Content as ErrorReportingDetailToolWindowControl;
-            control.DataContext = ViewModel;
         }
     }
 }

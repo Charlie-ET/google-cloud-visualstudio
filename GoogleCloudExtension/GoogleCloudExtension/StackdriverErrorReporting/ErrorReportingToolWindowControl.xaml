@@ -71,15 +71,6 @@
                 </Style.Triggers>
             </Style>
 
-            <Style TargetType="control:ImageToggleButton" x:Key="checkedToggle">
-                <Setter Property="Background" Value="Transparent"/>
-                <Style.Triggers>
-                    <Trigger Property="IsChecked" Value="True">
-                        <Setter Property="Background" Value="#EEEEEE" />
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-            
         </ResourceDictionary>
     </UserControl.Resources>
     
@@ -88,35 +79,16 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <control:TitleBar Margin="-12, 0, -12, 0" />
 
-        <control:ImageToggleButton 
+        <local:AutoReloadButton 
             Grid.Row="1"
-            Margin="12, 6, 0, 6"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Center"
-            UncheckedImage="{mp:ImageResource StackdriverErrorReporting/Resources/play_icon.png}"
-            CheckedImage="{mp:ImageResource StackdriverErrorReporting/Resources/pause_icon.png}" 
-            Padding="6" 
-            Foreground="#FF3B78E7"
-            FontWeight="DemiBold" 
-            MouseOverForeground="BlueViolet"
-            Style="{StaticResource checkedToggle}" 
-            Content="AUTO RELOAD"/>
+            x:Name="autoReloadToggleButton"/>
 
-        <Line 
-            Grid.Row="2"
-            HorizontalAlignment="Stretch"
-            X2="{Binding ActualWidth, RelativeSource={RelativeSource Self}}" 
-            Stroke="LightGray" 
-            SnapsToDevicePixels="True"
-            StrokeThickness="1"/>
-
-        <Grid Grid.Row="3"
+        <Grid Grid.Row="2"
               Margin="0, 12, 0, 12" 
               IsEnabled="{Binding IsLoadingComplete}"
               >
@@ -138,7 +110,7 @@
             <local:TimeRangeButtons Grid.Column="1" DataContext="{Binding TimeRangeButtonsModel}" />
         </Grid>
 
-        <DataGrid Grid.Row="4"
+        <DataGrid Grid.Row="3"
                   Panel.ZIndex="5"
                   x:Name="dataGridEventGroup"
                   IsReadOnly="True" 
@@ -208,7 +180,7 @@
         </DataGrid>
         
         <control:ProgressIndicator 
-            Grid.Row="2"
+            Grid.Row="3"
             Panel.ZIndex="10"
             Margin="0, 60, 0, 0"
             HorizontalAlignment="Center"                       
@@ -218,7 +190,7 @@
         </control:ProgressIndicator>
 
         <TextBox 
-            Grid.Row="2"
+            Grid.Row="3"
             Panel.ZIndex="15"
             Padding="8, 5, 8, 5" 
             VerticalAlignment="Top"
