@@ -25,30 +25,51 @@
     </UserControl.Resources>
     
     <!-- Title bar. -->
-    <Border Style="{StaticResource PageTitleBarStyle}" Padding="12, 0, 12, 0">
-    <StackPanel Orientation="Horizontal"
+    <Border Style="{StaticResource PageTitleBarStyle}" Padding="12, 6, 12, 6">
+        <StackPanel Orientation="Horizontal"
                 DataContext="{x:Static acct:CredentialsStore.Default}">
-        <Image Margin="0, 0, 6, 0"
-                   HorizontalAlignment="Left" 
-                   VerticalAlignment="Center" 
-                   Source="{mp:ImageResource Theming/Resources/logo_cloud.png}" />
-        <TextBlock VerticalAlignment="Center" 
-                       Style="{StaticResource CommonTextStyle}"     
-                       Padding="0, 5, 0, 5"
-                       Text="{x:Static ext:Resources.TitleBarAccountLabel}" />
-        <TextBlock Margin="6, 0, 0, 0"
-                       VerticalAlignment="Center" 
-                       Style="{StaticResource CommonTextStyle}"                    
-                       DataContext="{Binding CurrentAccount}"
-                       Text="{Binding AccountName}" />
-        <TextBlock Margin="12, 0, 0, 0"
-                       VerticalAlignment="Center" 
-                       Style="{StaticResource CommonTextStyle}"
-                       Text="{x:Static ext:Resources.TitleBarProjectIdLabel}" />
-        <TextBlock Margin="6, 0, 0, 0" 
-                       VerticalAlignment="Center" 
-                       Style="{StaticResource CommonTextStyle}" 
-                       Text="{Binding CurrentProjectId}" />
-    </StackPanel>
+        <Image 
+            Margin="0, 0, 6, 0"
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Center" 
+            Source="{mp:ImageResource Theming/Resources/logo_cloud.png}" />
+
+            <local:LinkButton 
+                x:Name="_accountMangementLinkButton"
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Center"                 
+                Content="{x:Static ext:Resources.CloudExplorerNoAccountButtonCaption}"
+                Click="AccountMangementLinkButton_Click"/>
+
+            <StackPanel 
+                Orientation="Horizontal"
+                x:Name="_accountProjectBlock">  
+                    <TextBlock 
+                        VerticalAlignment="Center" 
+                        Style="{StaticResource CommonTextStyle}"     
+                        Text="{x:Static ext:Resources.TitleBarAccountLabel}" />
+        
+                    <TextBlock 
+                        Margin="6, 0, 0, 0"
+                        x:Name="_accountNameBlock"
+                        VerticalAlignment="Center" 
+                        Style="{StaticResource CommonTextStyle}"                    
+                        DataContext="{Binding CurrentAccount}"
+                        Text="{Binding AccountName}" />
+        
+                    <TextBlock 
+                        Margin="12, 0, 0, 0"
+                        VerticalAlignment="Center" 
+                        Style="{StaticResource CommonTextStyle}"
+                        Text="{x:Static ext:Resources.TitleBarProjectIdLabel}" />
+        
+                    <TextBlock 
+                        Margin="6, 0, 0, 0" 
+                        x:Name="_projectNameBlock"
+                        VerticalAlignment="Center" 
+                        Style="{StaticResource CommonTextStyle}" 
+                        Text="{Binding CurrentProjectId}" />
+                </StackPanel>
+        </StackPanel>
     </Border>
 </UserControl>

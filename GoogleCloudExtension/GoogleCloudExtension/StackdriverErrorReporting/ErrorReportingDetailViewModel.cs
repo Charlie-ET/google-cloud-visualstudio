@@ -53,6 +53,13 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         private bool _showException;
         private string _exceptionString;
 
+        private bool _isAccountReset;
+        public bool IsAccountReset
+        {
+            get { return _isAccountReset; }
+            set { SetValueAndRaise(ref _isAccountReset, value); }
+        }
+
         public string ExceptionString
         {
             get { return _exceptionString; }
@@ -101,6 +108,10 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         {
             TimeRangeButtonsModel = new TimeRangeButtonsViewModel();
             TimeRangeButtonsModel.OnTimeRangeChanged += (s, e) => UpdateGroupAndEventAsync();
+            CredentialsStore.Default.CurrentProjectIdChanged += (sender, e) =>
+            {
+                IsAccountReset = true;
+            };
         }
 
         private IList<TimedCount> GenerateFakeRanges()
@@ -120,6 +131,7 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 
         public void UpdateView(ErrorGroupItem errorGroupItem, TimeRangeItem selectedTimeRangeItem)
         {
+            IsAccountReset = false;
             GroupItem = errorGroupItem;
             if (selectedTimeRangeItem.TimeRange == TimeRangeButtonsModel.SelectedTimeRangeItem.TimeRange)
             {
@@ -146,11 +158,11 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             ShowException = false;
             try
             {
-                var groups = await SerDataSourceInstance.Instance.Value.ListGroupStatusAsync(
+                var groups = await SerDataSourceInstance.Instance.Value?.ListGroupStatusAsync(
                     TimeRangeButtonsModel.SelectedTimeRangeItem.TimeRange,
                     TimeRangeButtonsModel.SelectedTimeRangeItem.TimedCountDuration,
                     GroupItem.ErrorGroup.Group.GroupId);
-                if (groups.GroupStats.Count > 0)
+                if (groups != null && groups.GroupStats != null && groups.GroupStats.Count > 0)
                 {
                     GroupItem = new ErrorGroupItem(groups.GroupStats?[0], TimeRangeButtonsModel.SelectedTimeRangeItem.TimeRange);
                 }
@@ -184,8 +196,11 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
                 ShowException = false;
                 try
                 {
-                    var events = await SerDataSourceInstance.Instance.Value.ListEventsAsync(GroupItem.ErrorGroup, TimeRangeButtonsModel.SelectedTimeRangeItem.EventTimeRange);
-                    EventItemCollection = CollectionViewSource.GetDefaultView(events.ErrorEvents?.Select(x => new EventItem(x))) as CollectionView;
+                    var events = await SerDataSourceInstance.Instance.Value?.ListEventsAsync(GroupItem.ErrorGroup, TimeRangeButtonsModel.SelectedTimeRangeItem.EventTimeRange);
+                    if (events != null && events.ErrorEvents != null)
+                    {
+                        EventItemCollection = CollectionViewSource.GetDefaultView(events.ErrorEvents.Select(x => new EventItem(x))) as CollectionView;
+                    }
                 }
                 catch (DataSourceException ex)
                 {

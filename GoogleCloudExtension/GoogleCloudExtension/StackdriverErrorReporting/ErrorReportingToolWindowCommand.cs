@@ -62,7 +62,6 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 
                 setEnabled();
                 menuItem.BeforeQueryStatus += (sender, e) => setEnabled();
-                CredentialsStore.Default.Reset += (sender, e) => CloseWindow();
             };
         }
 
@@ -96,36 +95,11 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         }
 
         /// <summary>
-        /// Close the LogsViewerToolWindow when there is no account available.
-        /// </summary>
-        private static void CloseWindow()
-        {
-            ErrorHandlerUtils.HandleExceptions(() =>
-            {
-                // Get the instance number 0 of this tool window. This window is single instance so this instance
-                // is actually the only one.
-                // The last flag is set to true so that if the tool window does not exists it will be created.
-                ToolWindowPane window = GoogleCloudExtensionPackage.Instance.FindToolWindow(
-                    typeof(ErrorReportingToolWindow), 0, false);
-                if (null == window?.Frame)
-                {
-                    Debug.WriteLine("Does not find LogsViewerToolWindow instance.");
-                }
-                else
-                {
-                    IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-                    Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.CloseFrame(
-                        (uint)__FRAMECLOSE.FRAMECLOSE_NoSave));
-                }
-            });
-        }
-
-        /// <summary>
         /// Shows the tool window when the menu item is clicked.
         /// </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event args.</param>
-        private void ShowToolWindow(object sender, EventArgs e)
+        public void ShowToolWindow(object sender, EventArgs e)
         {
             // Get the instance number 0 of this tool window. This window is single instance so this instance
             // is actually the only one.

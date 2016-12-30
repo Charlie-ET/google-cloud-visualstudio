@@ -224,9 +224,7 @@ namespace GoogleCloudExtension.CloudExplorer
 
             ManageAccountsCommand = new ProtectedCommand(OnManageAccountsCommand);
 
-            CredentialsStore.Default.CurrentAccountChanged += OnCurrentAccountChanged;
             CredentialsStore.Default.CurrentProjectIdChanged += OnCurrentProjectIdChanged;
-            CredentialsStore.Default.Reset += OnReset;
 
             ResetCredentials();
         }

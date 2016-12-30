@@ -31,12 +31,21 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
     /// </summary>
     public static class SerDataSourceInstance
     {
-        public static Lazy<SerDataSource> Instance { get; }
+        public static Lazy<SerDataSource> Instance { get; private set; }
 
         /// <summary>
         /// Static constructor of <seealso cref="SerDataSourceInstance"/>.
         /// </summary>
         static SerDataSourceInstance()
+        {
+            Instance = new Lazy<SerDataSource>(CreateDataSource);
+        }
+
+
+        /// <summary>
+        /// When the current project id is changed, the Instance needs to be recreated.
+        /// </summary>
+        public static void RecreateSourceInstance()
         {
             Instance = new Lazy<SerDataSource>(CreateDataSource);
         }

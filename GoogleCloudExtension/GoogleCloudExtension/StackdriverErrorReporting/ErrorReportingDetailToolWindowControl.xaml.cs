@@ -6,6 +6,7 @@
 
 namespace GoogleCloudExtension.StackdriverErrorReporting
 {
+    using GoogleCloudExtension.Accounts;
     using GoogleCloudExtension.Utils;
     using System;
     using System.Diagnostics;
@@ -55,26 +56,6 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         }
 
         /// <summary>
-        /// Response to data grid scroll change event.
-        /// Auto load more logs when it scrolls down to bottom.
-        /// </summary>
-        private void dataGrid_ScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            var grid = sender as DataGrid;
-            ScrollViewer sv = e.OriginalSource as ScrollViewer;
-            if (sv == null)
-            {
-                return;
-            }
-
-            if (e.VerticalOffset == sv.ScrollableHeight)
-            {
-                Debug.WriteLine("Now it is at bottom");
-                //ViewModel?.LoadNextPage();
-            }
-        }
-
-        /// <summary>
         /// When mouse click on a row, toggle display the row detail.
         /// 
         /// Note, it is necessay to find cell before find row. 
@@ -88,6 +69,18 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             {
                 row.DetailsVisibility =
                     row.DetailsVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+            }
+        }
+
+        private void LinkButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ErrorReportingDetailToolWindowCommand.Instance == null)
+            {
+                MessageBox.Show("ErrorReportingDetailToolWindowCommand.Instance == null");
+            }
+            else
+            {
+                ErrorReportingToolWindowCommand.Instance.ShowToolWindow(this, EventArgs.Empty);
             }
         }
     }

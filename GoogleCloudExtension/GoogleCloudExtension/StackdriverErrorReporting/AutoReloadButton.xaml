@@ -21,25 +21,17 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    
-    <Border 
-            Grid.Row="1"
-            BorderThickness="0, 0, 0, 1"    
-            BorderBrush="LightGray"
-            IsEnabled="{Binding IsLoadingComplete}">
-
-        <control:ImageToggleButton 
-                Margin="12, 6, 0, 6"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                UncheckedImage="{mp:ImageResource StackdriverErrorReporting/Resources/play_icon.png}"
-                CheckedImage="{mp:ImageResource StackdriverErrorReporting/Resources/pause_icon.png}" 
-                Padding="6" 
-                Foreground="#FF3B78E7"
-                FontWeight="DemiBold" 
-                MouseOverForeground="BlueViolet"
-                Style="{StaticResource checkedToggle}" 
-                IsChecked="{Binding IsChecked, ElementName=autoReloadToggle}"
-                Content="AUTO RELOAD" />
-    </Border>
+   
+    <control:ImageToggleButton 
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            UncheckedImage="{mp:ImageResource StackdriverErrorReporting/Resources/play_icon.png}"
+            CheckedImage="{mp:ImageResource StackdriverErrorReporting/Resources/pause_icon.png}" 
+            Padding="6" 
+            Foreground="#FF3B78E7"
+            FontWeight="DemiBold" 
+            MouseOverForeground="BlueViolet"
+            Style="{StaticResource checkedToggle}" 
+            IsChecked="{Binding IsChecked, ElementName=autoReloadToggle}"
+            Content="AUTO RELOAD" />
 </UserControl>

@@ -149,6 +149,9 @@
       <DependentUpon>ImageToggleButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LabelWithHelp.cs" />
+    <Compile Include="Controls\LinkButton.xaml.cs">
+      <DependentUpon>LinkButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PasswordBoxWithReveal.cs" />
     <Compile Include="Controls\PressButton.cs" />
     <Compile Include="Controls\ProgressIndicator.xaml.cs">
@@ -327,6 +330,8 @@
     <Compile Include="Utils\ViewModelBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="StackdriverErrorReporting\Resources\back_icon.png" />
+    <Resource Include="StackdriverErrorReporting\Resources\back_icon_12.png" />
     <Content Include="StackdriverErrorReporting\Resources\ErrorReportingDetailToolWindowCommand.png" />
     <Content Include="StackdriverErrorReporting\Resources\ErrorReportingToolWindowCommand.png" />
     <Resource Include="StackdriverErrorReporting\Resources\pause_icon.png" />
@@ -628,6 +633,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ImageToggleButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LinkButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

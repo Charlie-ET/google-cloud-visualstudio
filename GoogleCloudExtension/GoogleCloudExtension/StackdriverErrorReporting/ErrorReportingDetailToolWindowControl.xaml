@@ -6,6 +6,7 @@
              xmlns:control="clr-namespace:GoogleCloudExtension.Controls"     
              xmlns:local="clr-namespace:GoogleCloudExtension.StackdriverErrorReporting"
              xmlns:utils="clr-namespace:GoogleCloudExtension.Utils;assembly=GoogleCloudExtension.Utils"       
+             xmlns:mp="clr-namespace:GoogleCloudExtension.Extensions"                                  
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
@@ -18,6 +19,7 @@
             <ResourceDictionary Source="../Theming/CommonResources.xaml" />
         </ResourceDictionary.MergedDictionaries>
 
+        <utils:VisibilityConverter x:Key="visibilityConverterNegated" IsNegated="True"/>
         <utils:VisibilityConverter x:Key="visibilityConverter" />
 
             <Style x:Key="cellStyle" TargetType="DataGridCell">
@@ -86,29 +88,71 @@
                 </Setter.Value>
             </Setter>
         </Style>
-            
-    </ResourceDictionary>
+
+            <Style x:Key="backToOverviewButtonStyle" TargetType="control:ImageToggleButton" >
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Padding" Value="6" />
+                <Setter Property="Foreground" Value="#FF3B78E7" />
+                <Setter Property="MouseOverForeground" Value="BlueViolet" />
+                <Setter Property="Content" Value="To overview window" />
+                <EventSetter Event="Click" Handler="LinkButton_Click"/>
+            </Style>
+                   
+        </ResourceDictionary>
 </UserControl.Resources>
+    <StackPanel>
+        
+        <control:TitleBar />
 
-    <Grid Margin="12, 0, 12, 12">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-    
-        <control:TitleBar 
-            Grid.Row="0" 
-            Margin="-12, 0, -12, 0" />
+        <StackPanel 
+            x:Name="_emptyAccountBlock"
+            Margin="12"
+            VerticalAlignment="Top"                
+            HorizontalAlignment="Center"
+            Visibility="{Binding IsAccountReset, Converter={StaticResource visibilityConverter}}"
+            >
+            
+            <TextBlock Margin="6">Go to overview window and select an error group</TextBlock>
+            <control:ImageToggleButton 
+                FontSize="16"
+                Style="{StaticResource backToOverviewButtonStyle}" 
+                CheckedImage="{mp:ImageResource StackdriverErrorReporting/Resources/back_icon.png}"
+                UncheckedImage="{mp:ImageResource StackdriverErrorReporting/Resources/back_icon.png}" />
+            
+        </StackPanel>
 
-        <local:AutoReloadButton 
-            Grid.Row="1"
-            x:Name="autoReloadToggleButton"/>
+        <Grid Margin="12, 0, 12, 12" x:Name="_contentGrid"
+              Visibility="{Binding IsAccountReset, Converter={StaticResource visibilityConverterNegated}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Border 
+            Grid.Row="0"
+            Padding="0, 6, 0, 6"
+            BorderThickness="0, 0, 0, 1"    
+            BorderBrush="LightGray"
+            IsEnabled="{Binding IsLoadingComplete}">
+
+            <StackPanel  Orientation="Horizontal">
+                    <control:ImageToggleButton 
+                        Style="{StaticResource backToOverviewButtonStyle}" 
+                        CheckedImage="{mp:ImageResource StackdriverErrorReporting/Resources/back_icon_12.png}"
+                        UncheckedImage="{mp:ImageResource StackdriverErrorReporting/Resources/back_icon_12.png}" />
+
+
+                    <local:AutoReloadButton                 
+                        Margin="12, 0, 0, 0"
+                        x:Name="autoReloadToggleButton"/>
+            </StackPanel>
+        </Border>
 
         <!-- buttons -->
         <Grid 
-            Grid.Row="2"
+            Grid.Row="1"
             Margin="0, 12, 0, 12" 
             IsEnabled="{Binding IsControlEnabled}" >
             <Grid.ColumnDefinitions>
@@ -129,7 +173,7 @@
         </Grid>
 
         <ScrollViewer 
-            Grid.Row="3" 
+            Grid.Row="2" 
             HorizontalScrollBarVisibility="Disabled"    
             VerticalScrollBarVisibility="Auto" >
 
@@ -287,4 +331,5 @@
             </Grid>
         </ScrollViewer>
     </Grid>
+    </StackPanel>
 </UserControl>

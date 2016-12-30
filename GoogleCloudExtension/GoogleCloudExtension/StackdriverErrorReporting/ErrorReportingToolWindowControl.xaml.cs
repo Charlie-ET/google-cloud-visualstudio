@@ -38,7 +38,13 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         {
             base.OnApplyTemplate();
             DataContext = ErrorReportingViewModel.Instance;
-            autoReloadToggleButton.AutoReload += (sender, e) => (DataContext as ErrorReportingViewModel).GetGroupStats();
+            var viewModel = DataContext as ErrorReportingViewModel;
+            autoReloadToggleButton.AutoReload += (sender, e) => viewModel.GetGroupStats();
+            CredentialsStore.Default.CurrentProjectIdChanged += (sender, e) =>
+            {
+                SerDataSourceInstance.RecreateSourceInstance();
+                viewModel.GetGroupStats();
+            };
         }
     }
 }    

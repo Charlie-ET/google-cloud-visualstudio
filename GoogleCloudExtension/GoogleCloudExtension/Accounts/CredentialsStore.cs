@@ -217,14 +217,14 @@ namespace GoogleCloudExtension.Accounts
             var newCurrentAccount = GetAccount(accountName);
             if (newCurrentAccount != null)
             {
-                _currentAccount = newCurrentAccount;
-                _currentProjectId = projectId;
+                CurrentAccount = newCurrentAccount;
+                CurrentProjectId = projectId;
             }
             else
             {
                 Debug.WriteLine($"Unknown account: {accountName}");
-                _currentAccount = null;
-                _currentProjectId = null;
+                CurrentAccount = null;
+                CurrentProjectId = null;
             }
             Reset?.Invoke(this, EventArgs.Empty);
         }

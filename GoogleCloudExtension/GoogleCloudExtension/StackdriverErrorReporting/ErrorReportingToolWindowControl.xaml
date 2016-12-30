@@ -84,9 +84,16 @@
 
         <control:TitleBar Margin="-12, 0, -12, 0" />
 
-        <local:AutoReloadButton 
+        <Border 
             Grid.Row="1"
-            x:Name="autoReloadToggleButton"/>
+            Padding="12, 6, 0, 6"    
+            BorderThickness="0, 0, 0, 1"    
+            BorderBrush="LightGray"
+            IsEnabled="{Binding IsLoadingComplete}">
+
+            <local:AutoReloadButton     
+                x:Name="autoReloadToggleButton"/>
+        </Border>
 
         <Grid Grid.Row="2"
               Margin="0, 12, 0, 12" 

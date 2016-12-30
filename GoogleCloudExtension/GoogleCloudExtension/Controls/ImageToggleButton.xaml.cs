@@ -87,6 +87,5 @@ namespace GoogleCloudExtension.Controls
             get { return (Brush)GetValue(MouseOverForegroudProperty); }
             set { SetValue(MouseOverForegroudProperty, value); }
         }
-
     }
 }

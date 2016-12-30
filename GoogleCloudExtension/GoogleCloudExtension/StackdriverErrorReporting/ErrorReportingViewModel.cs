@@ -95,7 +95,7 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             ShowException = false;
             try
             {
-                results = await SerDataSourceInstance.Instance.Value.ListGroupStatusAsync(
+                results = await SerDataSourceInstance.Instance.Value?.ListGroupStatusAsync(
                     TimeRangeButtonsModel.SelectedTimeRangeItem.TimeRange,
                     TimeRangeButtonsModel.SelectedTimeRangeItem.TimedCountDuration);
             }
@@ -109,7 +109,8 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
                 IsLoadingComplete = true;
             }
 
-            AddItems(results?.GroupStats);
+            // results can be null when (1) there is exception. (2) current account is empty.
+            AddItems(results?.GroupStats);  
         }
 
         private void AddItems(IList<ErrorGroupStats> groupStats)
