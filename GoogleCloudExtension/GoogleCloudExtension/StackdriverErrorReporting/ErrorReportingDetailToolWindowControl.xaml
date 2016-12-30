@@ -59,36 +59,6 @@
             <Setter Property="Margin" Value="0, 6, 0, 6" />
         </Style>
 
-        <Style x:Key="TreeViewItemToggleButton_Style" TargetType="{x:Type ToggleButton}">
-            <Setter Property="Focusable" Value="False"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ToggleButton}">
-                        <StackPanel Orientation="Horizontal">
-                        <Grid Background="Transparent" Height="13" Margin="0,1,0,0" Width="15">
-                            <Path x:Name="Collapsed" Data="M 0,9 C0,9 5,4.5 5,4.5 5,4.5 0,0 0,0 0,0 0,9 0,9 z" HorizontalAlignment="Left" Height="9" Margin="2,1,1,1" Opacity="0.4" Stretch="Fill" SnapsToDevicePixels="True" Stroke="{TemplateBinding Foreground}" StrokeThickness="1" VerticalAlignment="Center" Width="5"/>
-                            <Path x:Name="Expanded" Data="M 0,6 C0,6 6,6 6,6 6,6 6,0 6,0 6,0 0,6 0,6 z" Fill="#FFA3A3A3" HorizontalAlignment="Left" Height="6" Margin="1,2,1,1" Stretch="Fill" SnapsToDevicePixels="True" Stroke="{TemplateBinding Foreground}" StrokeThickness="1" Visibility="Hidden" VerticalAlignment="Center" Width="6"/>
-                        </Grid>
-                            <ContentPresenter/>
-                            <StackPanel.ToolTip>
-                                <ToolTip x:Name="ToolTip" Content="Show stack." Style="{StaticResource CommonTooltipStyle}" />
-                            </StackPanel.ToolTip>
-                        </StackPanel>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="Visibility" TargetName="Collapsed" Value="Hidden"/>
-                                <Setter Property="Visibility" TargetName="Expanded" Value="Visible"/>
-                                <Setter Property="Content" TargetName="ToolTip" Value="HideF stack." />
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True" >
-                                <Setter Property="Foreground" Value="Blue" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
             <Style x:Key="backToOverviewButtonStyle" TargetType="control:ImageToggleButton" >
                 <Setter Property="HorizontalAlignment" Value="Left" />
                 <Setter Property="VerticalAlignment" Value="Center" />
@@ -101,11 +71,16 @@
                    
         </ResourceDictionary>
 </UserControl.Resources>
-    <StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         
-        <control:TitleBar />
+        <control:TitleBar Grid.Row="0"/>
 
-        <StackPanel 
+        <StackPanel
+            Grid.Row="1"
             x:Name="_emptyAccountBlock"
             Margin="12"
             VerticalAlignment="Top"                
@@ -122,7 +97,9 @@
             
         </StackPanel>
 
-        <Grid Margin="12, 0, 12, 12" x:Name="_contentGrid"
+        <Grid 
+            Grid.Row="1"
+            Margin="12, 0, 12, 12" x:Name="_contentGrid"
               Visibility="{Binding IsAccountReset, Converter={StaticResource visibilityConverterNegated}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -131,24 +108,23 @@
             </Grid.RowDefinitions>
 
             <Border 
-            Grid.Row="0"
-            Padding="0, 6, 0, 6"
-            BorderThickness="0, 0, 0, 1"    
-            BorderBrush="LightGray"
-            IsEnabled="{Binding IsLoadingComplete}">
+                Grid.Row="0"
+                Padding="0, 6, 0, 6"
+                BorderThickness="0, 0, 0, 1"    
+                BorderBrush="LightGray"
+                IsEnabled="{Binding IsLoadingComplete}">
 
-            <StackPanel  Orientation="Horizontal">
+                <StackPanel  Orientation="Horizontal">
                     <control:ImageToggleButton 
                         Style="{StaticResource backToOverviewButtonStyle}" 
                         CheckedImage="{mp:ImageResource StackdriverErrorReporting/Resources/back_icon_12.png}"
                         UncheckedImage="{mp:ImageResource StackdriverErrorReporting/Resources/back_icon_12.png}" />
 
-
                     <local:AutoReloadButton                 
                         Margin="12, 0, 0, 0"
                         x:Name="autoReloadToggleButton"/>
-            </StackPanel>
-        </Border>
+                </StackPanel>
+            </Border>
 
         <!-- buttons -->
         <Grid 
@@ -261,16 +237,24 @@
                     <Border Style="{StaticResource BorderCommonStyle}" >
                         <StackPanel Margin="6">
 
-                            <ToggleButton  
-                                Style="{StaticResource TreeViewItemToggleButton_Style}"                        
+                            <control:ImageToggleButton  
+                                Padding="6"
+                                UncheckedImage="{mp:ImageResource StackdriverErrorReporting/Resources/show_more_icon.png}"
+                                CheckedImage="{mp:ImageResource StackdriverErrorReporting/Resources/show_less_icon.png}" 
                                 x:Name="traceSampleToggle"
                                 HorizontalAlignment="Left"
-                                IsChecked="True" 
-                                Padding="2, 0, 2, 0">
+                                IsChecked="True" >
                                 Stack trace sample
-                            </ToggleButton>
+                            </control:ImageToggleButton>
 
-                            <TextBlock Text="{Binding Stack}" 
+                            <TextBox 
+                                BorderThickness="0"
+                                Padding="8, 5, 8, 5"
+                                Text="{Binding Stack, Mode=OneWay}" 
+                                IsReadOnly="True"
+                                AcceptsReturn="True"
+                                TextWrapping="NoWrap"
+                                HorizontalScrollBarVisibility="Auto"
                                 Visibility="{Binding IsChecked, ElementName=traceSampleToggle, 
                                 Converter={StaticResource visibilityConverter}}" />
 
@@ -331,5 +315,5 @@
             </Grid>
         </ScrollViewer>
     </Grid>
-    </StackPanel>
+    </Grid>
 </UserControl>

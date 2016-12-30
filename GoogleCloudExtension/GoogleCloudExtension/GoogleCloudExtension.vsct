@@ -100,15 +100,15 @@
 
       <Button guid="guidGoogleCloudExtensionPackageCmdSet" id="cmdidErrorReportingToolWindowCommand" priority="0x0560" type="Button">
         <Parent guid="guidGoogleCloudExtensionPackageCmdSet" id="GcpToolsGroup" />
-        <Icon guid="guidImages" id="bmpPic1" />
+        <Icon guid="guidGoogleCloudExtensionPackageIcon" id="stackdriverErrorReportingIcon" />
         <Strings>
           <ButtonText>Show Stackdriver Error Reporting</ButtonText>
         </Strings>
       </Button>
     </Buttons>
     <Bitmaps>
-      <Bitmap guid="guidImages" href="StackdriverErrorReporting\Resources\ErrorReportingToolWindowCommand.png" 
-              usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
+      <Bitmap guid="guidGoogleCloudExtensionPackageIcon" href="StackdriverErrorReporting\Resources\eReport_menu_icon.png" 
+              usedList="stackdriverErrorReportingIcon" />
     </Bitmaps>
   </Commands>
 
@@ -128,15 +128,10 @@
       <IDSymbol value="4230" name="GcpProjectContextMenu" />
       <IDSymbol value="4231" name="cmdidErrorReportingToolWindowCommand" />
     </GuidSymbol>
-  
-  
-    <GuidSymbol value="{642f042b-7a1c-4659-87ab-bd00c0e4623e}" name="guidImages">
-      <IDSymbol name="bmpPic1" value="1" />
-      <IDSymbol name="bmpPic2" value="2" />
-      <IDSymbol name="bmpPicSearch" value="3" />
-      <IDSymbol name="bmpPicX" value="4" />
-      <IDSymbol name="bmpPicArrows" value="5" />
-      <IDSymbol name="bmpPicStrikethrough" value="6" />
+
+
+    <GuidSymbol name="guidGoogleCloudExtensionPackageIcon" value="{1014A04F-F8DA-48E4-9C20-380AEC85F3F8}">
+      <IDSymbol name="stackdriverErrorReportingIcon" value="1" />
     </GuidSymbol>
   
   </Symbols>

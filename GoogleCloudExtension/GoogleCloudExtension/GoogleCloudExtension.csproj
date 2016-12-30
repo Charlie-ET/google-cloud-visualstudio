@@ -330,10 +330,11 @@
     <Compile Include="Utils\ViewModelBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="StackdriverErrorReporting\Resources\show_less_icon.png" />
+    <Resource Include="StackdriverErrorReporting\Resources\show_more_icon.png" />
     <Resource Include="StackdriverErrorReporting\Resources\back_icon.png" />
     <Resource Include="StackdriverErrorReporting\Resources\back_icon_12.png" />
-    <Content Include="StackdriverErrorReporting\Resources\ErrorReportingDetailToolWindowCommand.png" />
-    <Content Include="StackdriverErrorReporting\Resources\ErrorReportingToolWindowCommand.png" />
+    <Resource Include="StackdriverErrorReporting\Resources\eReport_menu_icon.png" />
     <Resource Include="StackdriverErrorReporting\Resources\pause_icon.png" />
     <Resource Include="StackdriverErrorReporting\Resources\play_icon.png" />
     <Resource Include="Theming\Resources\logo_cloud.png" />
