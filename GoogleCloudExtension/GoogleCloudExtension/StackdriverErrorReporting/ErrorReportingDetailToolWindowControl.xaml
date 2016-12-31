@@ -198,7 +198,7 @@
                         Padding="6, 0, 0, 0">
                                 <StackPanel>
                                     <TextBlock Text="First seen" />
-                                    <TextBlock Text="{Binding First Seen}" />
+                                    <TextBlock Text="{Binding FirstSeen}" />
                                 </StackPanel>
                             </Border>
                             <Border BorderThickness="1, 0, 0, 0"
