@@ -176,41 +176,70 @@
                     <Border 
                         Style="{StaticResource BorderCommonStyle}"
                         DataContext="{Binding GroupItem}">
-                        <UniformGrid 
-                            Rows="1" Columns="4" 
-                            Margin="12">
-                            <Border >
+
+                            <Grid>
+
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" SharedSizeGroup="A" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*"  SharedSizeGroup="A" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" SharedSizeGroup="A" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" SharedSizeGroup="A" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0">
                                 <StackPanel >
                                     <TextBlock Text="Occurances" />
                                     <TextBlock Text="{Binding Count}" />
                                 </StackPanel>
-                            </Border>
-                            <Border BorderThickness="1, 0, 0, 0"
-                        BorderBrush="LightGray"
-                        Padding="6, 0, 0, 0">
-                                <StackPanel>
-                                    <TextBlock Text="Seen in" />
-                                    <TextBlock Text="{Binding SeenIn}" />
-                                </StackPanel>
-                            </Border>
-                            <Border BorderThickness="1, 0, 0, 0"
-                        BorderBrush="LightGray"
-                        Padding="6, 0, 0, 0">
-                                <StackPanel>
-                                    <TextBlock Text="First seen" />
-                                    <TextBlock Text="{Binding FirstSeen}" />
-                                </StackPanel>
-                            </Border>
-                            <Border BorderThickness="1, 0, 0, 0"
-                        BorderBrush="LightGray"
-                        Padding="6, 0, 0, 0" >
-                                <StackPanel>
-                                    <TextBlock Text="Last seen" />
-                                    <TextBlock Text="{Binding LastSeen}" />
-                                </StackPanel>
-                            </Border>
-                        </UniformGrid>
-                    </Border>
+                                </Border>
+                                
+                                <Border Grid.Column="1"/>
+                                
+                                <Border 
+                                    Grid.Column="2"
+                                    BorderThickness="1, 0, 0, 0"
+                                    BorderBrush="LightGray"
+                                    Padding="6, 0, 0, 0">
+                                    <StackPanel>
+                                        <TextBlock Text="Seen in" />
+                                        <TextBlock Text="{Binding SeenIn}" />
+                                    </StackPanel>
+                                </Border>
+                                
+                                <Border Grid.Column="3"/>
+                                
+                                <Border 
+                                    Grid.Column="4"
+                                    BorderThickness="1, 0, 0, 0"
+                                    BorderBrush="LightGray"
+                                    Padding="6, 0, 0, 0">
+                                    <StackPanel>
+                                        <TextBlock Text="First seen" />
+                                        <TextBlock Text="{Binding FirstSeen}" />
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Grid.Column="5"/>
+
+                                <Border 
+                                    Grid.Column="6"
+                                    BorderThickness="1, 0, 0, 0"
+                                    BorderBrush="LightGray"
+                                    Padding="6, 0, 0, 0" >
+                                    <StackPanel>
+                                        <TextBlock Text="Last seen" />
+                                        <TextBlock Text="{Binding LastSeen}" />
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Grid.Column="7" />
+                            </Grid>
+                        </Border>
 
                     <!-- chart and progress indicator. -->
                     <Border Style="{StaticResource BorderCommonStyle}" 
