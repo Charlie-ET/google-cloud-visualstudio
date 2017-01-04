@@ -83,6 +83,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <control:TitleBar Margin="-12, 0, -12, 0" />
@@ -133,7 +134,7 @@
                   RowStyle="{StaticResource rowStyle}" 
                   IsEnabled="{Binding IsLoadingComplete}"
                   ScrollViewer.ScrollChanged="dataGrid_ScrollChanged"
-                  Visibility="{Binding ShowException, Converter={StaticResource visibilityConverterNegated}}" Margin="1,15,-1,34" Grid.RowSpan="2" 
+                  Visibility="{Binding ShowException, Converter={StaticResource visibilityConverterNegated}}"  
                   >
             <DataGrid.Resources>
                 <!--DataTemplate for Published Date column defined in Grid.Resources.  PublishDate is a property on the ItemsSource of type DateTime -->
@@ -199,7 +200,17 @@
             HorizontalAlignment="Center"                       
             VerticalAlignment="Top" 
             FullDuration="1000"
-            Visibility="{Binding IsLoadingComplete, Converter={StaticResource visibilityConverterNegated}}" >
+            Visibility="{Binding IsRefreshing, Converter={StaticResource visibilityConverter}}" >
+        </control:ProgressIndicator>
+
+        <control:ProgressIndicator 
+            Grid.Row="4"
+            Padding="12"
+            Panel.ZIndex="10"
+            Margin="0, -60, 0, 0"
+            HorizontalAlignment="Center"                       
+            FullDuration="1000"
+            Visibility="{Binding IsLoadingNextPage, Converter={StaticResource visibilityConverter}}" >
         </control:ProgressIndicator>
 
         <TextBox 

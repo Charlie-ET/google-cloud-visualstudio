@@ -40,7 +40,9 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         }
 
         private string _nextPageToken;
-        private bool isLoading;
+        private bool _isLoading;
+        private bool _isRefreshing;
+        private bool _isLoadingNextPage;
 
         private bool _showException;
         private string _exceptionString;
@@ -59,8 +61,20 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 
         public bool IsLoadingComplete
         {
-            get { return !isLoading; }
-            set { SetValueAndRaise(ref isLoading, !value); }
+            get { return !_isLoading; }
+            set { SetValueAndRaise(ref _isLoading, !value); }
+        }
+
+        public bool IsRefreshing
+        {
+            get { return _isRefreshing; }
+            set { SetValueAndRaise(ref _isRefreshing, value); }
+        }
+
+        public bool IsLoadingNextPage
+        {
+            get { return _isLoadingNextPage; }
+            set { SetValueAndRaise(ref _isLoadingNextPage, value); }
         }
 
         public static ErrorReportingViewModel Instance { get; }
@@ -96,7 +110,7 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
 
         public void LoadNextPage()
         {
-            if (isLoading)
+            if (_isLoading)
             {
                 Debug.WriteLine("isLoading is true, skip LoadNextPage");
                 return;
@@ -108,15 +122,23 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
                 return;
             }
 
-            LoadAsync();
+            LoadAsync(refresh: false);
         }
 
-        private async Task LoadAsync()
+        private async Task LoadAsync(bool refresh = true)
         {
             IsLoadingComplete = false;
             GroupStatsRequestResult results = null;
             ShowException = false;
             _nextPageToken = null;
+            if (refresh)
+            {
+                IsRefreshing = true;
+            }
+            else
+            {
+                IsLoadingNextPage = true;
+            }
             try
             {
                 results = await SerDataSourceInstance.Instance.Value?.ListGroupStatusAsync(
@@ -132,6 +154,8 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             finally
             {
                 IsLoadingComplete = true;
+                IsRefreshing = false;
+                IsLoadingNextPage = false;
             }
 
             // results can be null when (1) there is exception. (2) current account is empty.
