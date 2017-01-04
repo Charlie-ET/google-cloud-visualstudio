@@ -132,6 +132,7 @@
                   CellStyle="{StaticResource cellStyle}"
                   RowStyle="{StaticResource rowStyle}" 
                   IsEnabled="{Binding IsLoadingComplete}"
+                  ScrollViewer.ScrollChanged="dataGrid_ScrollChanged"
                   Visibility="{Binding ShowException, Converter={StaticResource visibilityConverterNegated}}" Margin="1,15,-1,34" Grid.RowSpan="2" 
                   >
             <DataGrid.Resources>
@@ -169,8 +170,8 @@
                                         CellTemplate="{StaticResource MessageStackTemplate}" />
 
                 <DataGridTextColumn Binding="{Binding SeenIn}" 
-                            Header="Seen in"
-                            />
+                                    Header="Seen in"
+                                    />
 
                 <DataGridTextColumn Binding="{Binding FirstSeen, StringFormat=d}" 
                                     Header="First seen"

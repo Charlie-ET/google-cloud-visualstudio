@@ -39,7 +39,6 @@
         <Style x:Key="rowStyle" TargetType="DataGridRow">
             <Setter Property="TextBlock.TextWrapping" Value="NoWrap" />
             <Setter Property="TextBlock.FontSize" Value="12" />
-            <Setter Property="Margin" Value="0, 0, 0, 1"/>
             <Setter Property="BorderThickness" Value="0, 0, 0, 1"/>
             <Setter Property="BorderBrush" Value="LightGray" />
             <Setter Property="Background" Value="#FFFDFDFD" />
@@ -103,7 +102,6 @@
               Visibility="{Binding IsAccountReset, Converter={StaticResource visibilityConverterNegated}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -126,38 +124,37 @@
                 </StackPanel>
             </Border>
 
-        <!-- buttons -->
-        <Grid 
-            Grid.Row="1"
-            Margin="0, 12, 0, 12" 
-            IsEnabled="{Binding IsControlEnabled}" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock 
-                Grid.Column="0"                
-                Margin="0, 0, 36, 0"
-                FontWeight="DemiBold"
-                Text="{Binding Message}"
-                Style="{StaticResource CommonTextStyle}" />
-
-            <local:TimeRangeButtons 
-                Grid.Column="1" 
-                DataContext="{Binding TimeRangeButtonsModel}" />
-        </Grid>
-
         <ScrollViewer 
-            Grid.Row="2" 
+            Grid.Row="1" 
             HorizontalScrollBarVisibility="Disabled"    
             VerticalScrollBarVisibility="Auto" >
 
-            <Grid>
+          <StackPanel>
+            
+                <!-- buttons -->
+                <Grid 
+                    Margin="0, 12, 0, 12" 
+                    IsEnabled="{Binding IsControlEnabled}" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock 
+                        Grid.Column="0"                
+                        Margin="0, 0, 36, 0"
+                        FontWeight="DemiBold"
+                        Text="{Binding Message}"
+                        Style="{StaticResource CommonTextStyle}" />
+
+                        <local:TimeRangeButtons 
+                        Grid.Column="1" 
+                        DataContext="{Binding TimeRangeButtonsModel}" />
+                </Grid>
+
 
                 <!-- Exception Box. -->
                 <TextBox 
-                    Grid.Row="2"
                     Panel.ZIndex="15"
                     Padding="8, 5, 8, 5" 
                     VerticalAlignment="Top"
@@ -175,10 +172,10 @@
                     <!-- summary  -->
                     <Border 
                         Style="{StaticResource BorderCommonStyle}"
-                        DataContext="{Binding GroupItem}">
+                        DataContext="{Binding GroupItem}"
+                        Padding="12, 12, 12, 6">
 
                             <Grid>
-
 
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -186,35 +183,69 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*"  SharedSizeGroup="A" />
                                     <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*"  SharedSizeGroup="A" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" SharedSizeGroup="A" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" SharedSizeGroup="A" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" SharedSizeGroup="A" />
                                 </Grid.ColumnDefinitions>
 
                                 <Border Grid.Column="0">
-                                <StackPanel >
-                                    <TextBlock Text="Occurances" />
-                                    <TextBlock Text="{Binding Count}" />
-                                </StackPanel>
+                                    <StackPanel >
+                                        <TextBlock Text="Occurances" />
+                                        <TextBlock Text="{Binding Count}" />
+                                    </StackPanel>
                                 </Border>
                                 
                                 <Border Grid.Column="1"/>
-                                
+
                                 <Border 
-                                    Grid.Column="2"
+                                    Grid.Column="2" 
+                                    BorderThickness="1, 0, 0, 0"
+                                    BorderBrush="LightGray"
+                                    Padding="6, 0, 12, 0"                                     
+                                    Visibility="{Binding AffectedUsersCount, Converter={utils:NullEmptyInvisibleConverter}}">
+                                    <StackPanel>
+                                        <TextBlock Text="Users affected" />
+                                        <TextBlock Text="{Binding AffectedUsersCount}" />
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Grid.Column="3" Visibility="{Binding AffectedUsersCount, Converter={utils:NullEmptyInvisibleConverter}}" />
+
+                                <Border 
+                                    Grid.Column="4"
                                     BorderThickness="1, 0, 0, 0"
                                     BorderBrush="LightGray"
                                     Padding="6, 0, 0, 0">
                                     <StackPanel>
                                         <TextBlock Text="Seen in" />
-                                        <TextBlock Text="{Binding SeenIn}" />
+                                        <TextBlock Text="{Binding SeenIn}" 
+                                                   TextWrapping="Wrap"
+                                                   MaxWidth="360" />
                                     </StackPanel>
                                 </Border>
                                 
-                                <Border Grid.Column="3"/>
-                                
+                                <Border Grid.Column="5"/>
+
                                 <Border 
-                                    Grid.Column="4"
+                                    Grid.Column="6"
+                                    BorderThickness="1, 0, 0, 0"
+                                    BorderBrush="LightGray"
+                                    Padding="6, 0, 12, 0" 
+                                    Visibility="{Binding Status, Converter={utils:NullEmptyInvisibleConverter}}">
+                                    <StackPanel>
+                                        <TextBlock Text="Status" />
+                                        <TextBlock Text="{Binding Status}" />
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Grid.Column="7" Visibility="{Binding Status, Converter={utils:NullEmptyInvisibleConverter}}"/>
+
+                                <Border 
+                                    Grid.Column="8"
                                     BorderThickness="1, 0, 0, 0"
                                     BorderBrush="LightGray"
                                     Padding="6, 0, 0, 0">
@@ -224,10 +255,10 @@
                                     </StackPanel>
                                 </Border>
 
-                                <Border Grid.Column="5"/>
+                                <Border Grid.Column="9"/>
 
                                 <Border 
-                                    Grid.Column="6"
+                                    Grid.Column="10"
                                     BorderThickness="1, 0, 0, 0"
                                     BorderBrush="LightGray"
                                     Padding="6, 0, 0, 0" >
@@ -237,7 +268,7 @@
                                     </StackPanel>
                                 </Border>
 
-                                <Border Grid.Column="7" />
+                                <Border Grid.Column="11" />
                             </Grid>
                         </Border>
 
@@ -291,7 +322,7 @@
                     </Border>
 
                     <!-- Recent samples. -->
-                    <StackPanel Margin="0, 12, 0, 6">
+                    <StackPanel Margin="12, 12, 0, 6">
 
                         <TextBlock Text="Recent Samples" Style="{StaticResource CommonTextStyle}" Padding="0, 6, 0, 6"/>
 
@@ -307,7 +338,7 @@
                             <DataGrid 
                                 Panel.ZIndex="10"
                                 x:Name="DataGridEvents" 
-                              
+                                VerticalScrollBarVisibility="Disabled"
                                 ItemsSource="{Binding EventItemCollection}"
                                 AutoGenerateColumns="False" 
                                 IsReadOnly="True" 
@@ -319,6 +350,7 @@
                                 RowStyle="{StaticResource rowStyle}"
                                 BorderThickness="0"
                                 PreviewMouseDown="dataGrid_PreviewMouseDown"
+                                PreviewMouseWheel="dataGrid_PreviewMouseWheel"
                                 >
                                 <DataGrid.Resources>
                                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" 
@@ -341,7 +373,7 @@
                     </StackPanel>
 
                 </StackPanel>
-            </Grid>
+            </StackPanel>
         </ScrollViewer>
     </Grid>
     </Grid>

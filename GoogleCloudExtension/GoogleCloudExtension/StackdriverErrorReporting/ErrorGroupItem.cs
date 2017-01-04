@@ -37,7 +37,8 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         public long Count => ErrorGroup.Count.GetValueOrDefault();
         public object FirstSeen => ErrorGroup.FirstSeenTime;
         public object LastSeen => ErrorGroup.LastSeenTime;
-        public object SeenIn => String.Join(";", ErrorGroup.AffectedServices.Select(x => FormatServiceContext(x)));
+        public object SeenIn => String.Join(Environment.NewLine, 
+            ErrorGroup.AffectedServices.Select(x => FormatServiceContext(x)));
         public string Message { get; }
         public string Stack { get; }
         public long? AffectedUsersCount => ErrorGroup.AffectedUsersCount;
@@ -67,11 +68,10 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
                 builder.AppendLine(serviceContext.ETag);
             }
 
-            builder.Append(serviceContext.Service);
-
+            builder.Append(serviceContext.Service);        
             if (!String.IsNullOrWhiteSpace(serviceContext.Version))
             {
-                builder.Append($".{serviceContext.Version}");
+                builder.Append($":{serviceContext.Version}");
             }
 
             return builder.ToString();

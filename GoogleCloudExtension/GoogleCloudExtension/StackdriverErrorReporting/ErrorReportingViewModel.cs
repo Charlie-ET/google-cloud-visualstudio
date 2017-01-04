@@ -39,6 +39,7 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             Instance = new ErrorReportingViewModel();
         }
 
+        private string _nextPageToken;
         private bool isLoading;
 
         private bool _showException;
@@ -78,31 +79,55 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             TimeRangeButtonsModel.OnTimeRangeChanged += OnTimeRangeChanged;
             _groupStatsCollection = new ObservableCollection<ErrorGroupItem>();
             GroupStatsView = new ListCollectionView(_groupStatsCollection);
-            GetGroupStats();
+            Refresh();
         }
 
         private void OnTimeRangeChanged(object sender, EventArgs v)
         {
-            GetGroupStats();
+            Refresh();
             RaisePropertyChanged(nameof(CurrentTimeRangeCaption));
         }
 
-        public async Task GetGroupStats()
+        public void Refresh()
+        {
+            _groupStatsCollection.Clear();
+            LoadAsync();
+        }
+
+        public void LoadNextPage()
+        {
+            if (isLoading)
+            {
+                Debug.WriteLine("isLoading is true, skip LoadNextPage");
+                return;
+            }
+
+            if (_nextPageToken == null)
+            {
+                Debug.WriteLine("_nextPageToken is null, there is no more events group to load");
+                return;
+            }
+
+            LoadAsync();
+        }
+
+        private async Task LoadAsync()
         {
             IsLoadingComplete = false;
-            _groupStatsCollection.Clear();
             GroupStatsRequestResult results = null;
             ShowException = false;
+            _nextPageToken = null;
             try
             {
                 results = await SerDataSourceInstance.Instance.Value?.ListGroupStatusAsync(
                     TimeRangeButtonsModel.SelectedTimeRangeItem.TimeRange,
-                    TimeRangeButtonsModel.SelectedTimeRangeItem.TimedCountDuration);
+                    TimeRangeButtonsModel.SelectedTimeRangeItem.TimedCountDuration,
+                    nextPageToken: _nextPageToken);
             }
             catch (DataSourceException ex)
             {
                 ShowException = true;
-                ExceptionString = ex.ToString();       
+                ExceptionString = ex.ToString();
             }
             finally
             {
@@ -110,7 +135,8 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             }
 
             // results can be null when (1) there is exception. (2) current account is empty.
-            AddItems(results?.GroupStats);  
+            _nextPageToken = results?.NextPageToken;
+            AddItems(results?.GroupStats);
         }
 
         private void AddItems(IList<ErrorGroupStats> groupStats)

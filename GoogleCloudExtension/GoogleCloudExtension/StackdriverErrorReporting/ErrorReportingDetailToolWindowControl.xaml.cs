@@ -42,31 +42,33 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
         /// <summary>
         /// Get the first ancestor control element of type TControl.
         /// </summary>
-        /// <typeparam name="TControl">A <seealso cref="Control"/> type.</typeparam>
-        /// <param name="dependencyObj">A <seealso cref="DependencyObject"/> element. </param>
+        /// <typeparam name="TUIElement">A <seealso cref="UIElement"/> type.</typeparam>
+        /// <param name="obj">A <seealso cref="DependencyObject"/> element. </param>
         /// <returns>null or TControl object.</returns>
-        private TControl FindAncestorControl<TControl>(DependencyObject dependencyObj) where TControl : Control
+        private TUIElement FindAncestorControl<TUIElement>(DependencyObject obj) where TUIElement : UIElement
         {
-            while ((dependencyObj != null) && !(dependencyObj is TControl))
+            while ((obj != null) && !(obj is TUIElement))
             {
-                dependencyObj = VisualTreeHelper.GetParent(dependencyObj);
+                obj = VisualTreeHelper.GetParent(obj);
             }
 
-            return dependencyObj as TControl;  // Note, null as Class is val 
+            return obj as TUIElement;  // Note, "null as TUIElement" is valid and returns null. 
         }
 
         /// <summary>
         /// When mouse click on a row, toggle display the row detail.
-        /// 
-        /// Note, it is necessay to find cell before find row. 
-        /// Otherwise when clicking at the detail view area, it 'finds' the DataGridRow too.
+        /// if the mouse is clikcing on detail panel, does not collapse it.
         /// </summary>
         private void dataGrid_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            var cell = FindAncestorControl<DataGridCell>(e.OriginalSource as DependencyObject);
-            DataGridRow row = FindAncestorControl<DataGridRow>(cell);
+            DataGridRow row = FindAncestorControl<DataGridRow>(e.OriginalSource as DependencyObject);
             if (row != null)
             {
+                if (null != FindAncestorControl<DataGridDetailsPresenter>(e.OriginalSource as DependencyObject))
+                {
+                    return;
+                }
+
                 row.DetailsVisibility =
                     row.DetailsVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
             }
@@ -81,6 +83,22 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             else
             {
                 ErrorReportingToolWindowCommand.Instance.ShowToolWindow(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// This is to enable outer scroll bar.
+        /// </summary>
+        private void dataGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (!e.Handled)
+            {
+                e.Handled = true;
+                var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
+                eventArg.RoutedEvent = UIElement.MouseWheelEvent;
+                eventArg.Source = sender;
+                var parent = ((Control)sender).Parent as UIElement;
+                parent.RaiseEvent(eventArg);
             }
         }
     }

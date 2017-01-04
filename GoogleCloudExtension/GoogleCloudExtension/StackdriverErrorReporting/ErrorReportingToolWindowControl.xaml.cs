@@ -15,7 +15,7 @@
 using GoogleCloudExtension;
 using GoogleCloudExtension.Accounts;
 using GoogleCloudExtension.DataSources.ErrorReporting;
-using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -39,12 +39,33 @@ namespace GoogleCloudExtension.StackdriverErrorReporting
             base.OnApplyTemplate();
             DataContext = ErrorReportingViewModel.Instance;
             var viewModel = DataContext as ErrorReportingViewModel;
-            autoReloadToggleButton.AutoReload += (sender, e) => viewModel.GetGroupStats();
+            autoReloadToggleButton.AutoReload += (sender, e) => viewModel.Refresh();
             CredentialsStore.Default.CurrentProjectIdChanged += (sender, e) =>
             {
                 SerDataSourceInstance.RecreateSourceInstance();
-                viewModel.GetGroupStats();
+                viewModel.Refresh();
             };
+        }
+
+        /// <summary>
+        /// Response to data grid scroll change event.
+        /// Auto load more logs when it scrolls down to bottom.
+        /// </summary>
+        private void dataGrid_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            var grid = sender as DataGrid;
+            ScrollViewer sv = e.OriginalSource as ScrollViewer;
+            if (sv == null)
+            {
+                return;
+            }
+
+            if (e.VerticalOffset == sv.ScrollableHeight)
+            {
+                Debug.WriteLine("Now it is at bottom");
+                var viewModel = DataContext as ErrorReportingViewModel;
+                viewModel?.LoadNextPage();
+            }
         }
     }
 }    
